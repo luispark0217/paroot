@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ECF0E8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121A16" media="(prefers-color-scheme: dark)">
+<meta name="description" content="공부하다 잠깐, 식물 퀴즈 한 문제 풀고 식물을 키우는 앱, 파릇">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="파릇">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon.svg">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<title>파릇</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* Layout: a single quiet room — arched window with live game-time sky, plant on the sill, care timeline under it. */
+:root{
+  --bg:#ECF0E8; --wall:#F3F5EF; --paper:#FAFBF7; --ink:#1C2A21; --muted:#68796D; --line:#D5DED1; --frame:#C9D3C4;
+  --leaf:#3D7653; --leaf-2:#6C9F78; --leaf-deep:#2B5A3F; --leaf-var:#CBD98E; --stem:#4C7C58; --wood:#8A6A4E;
+  --succ:#86AFA5; --succ-tip:#C98A8A; --bloom:#8C7BB8; --flower:#E39AA8; --fruit:#C9503F; --sun:#E7B541; --soil:#6E5240;
+  --water:#4C86A3; --feed:#A9853A; --grow:#3D7653; --accent:#2E6845; --on-accent:#F3F7F1; --warn:#B2643C;
+  --pot-1:#B7C8B1; --pot-2:#D8D2C6; --pot-3:#58796A; --pot-4:#C79A80; --pot-5:#EEF0EA; --shade:rgba(30,45,35,.09);
+  --dawn-a:#F3D9C9; --dawn-b:#F7EBD6; --day-a:#BFDCE8; --day-b:#EAF4EC; --dusk-a:#E9B99A; --dusk-b:#C9A7B8; --night-a:#1E2A40; --night-b:#34405A;
+  --dim:#0F1A14;
+  --f-display:"Gowun Batang","Nanum Myeongjo",Georgia,serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121A16; --wall:#18221C; --paper:#1D2822; --ink:#E0E9DE; --muted:#97AA9C; --line:#2A3830; --frame:#33443A;
+  --leaf:#6DAB7F; --leaf-2:#4F8A62; --leaf-deep:#3E7454; --leaf-var:#A8BB6B; --stem:#5E9470; --wood:#A08064;
+  --succ:#7FA9A0; --succ-tip:#C98A8A; --bloom:#A595D1; --flower:#E7A3B1; --fruit:#D96553; --sun:#E9C05A; --soil:#4A382C;
+  --water:#7DB3CE; --feed:#D2AE62; --grow:#7DBE93; --accent:#7DBE93; --on-accent:#0F1A13; --warn:#E39C74;
+  --pot-1:#56695C; --pot-2:#6B665D; --pot-3:#2F4B3C; --pot-4:#8A6656; --pot-5:#A8ADA4; --shade:rgba(0,0,0,.3);
+  --dawn-a:#5A4A4A; --dawn-b:#3E3C3A; --day-a:#3C5866; --day-b:#2A3B35; --dusk-a:#5E4436; --dusk-b:#3F3546; --night-a:#0C1220; --night-b:#18213A;
+  --dim:#000; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121A16; --wall:#18221C; --paper:#1D2822; --ink:#E0E9DE; --muted:#97AA9C; --line:#2A3830; --frame:#33443A;
+  --leaf:#6DAB7F; --leaf-2:#4F8A62; --leaf-deep:#3E7454; --leaf-var:#A8BB6B; --stem:#5E9470; --wood:#A08064;
+  --succ:#7FA9A0; --succ-tip:#C98A8A; --bloom:#A595D1; --flower:#E7A3B1; --fruit:#D96553; --sun:#E9C05A; --soil:#4A382C;
+  --water:#7DB3CE; --feed:#D2AE62; --grow:#7DBE93; --accent:#7DBE93; --on-accent:#0F1A13; --warn:#E39C74;
+  --pot-1:#56695C; --pot-2:#6B665D; --pot-3:#2F4B3C; --pot-4:#8A6656; --pot-5:#A8ADA4; --shade:rgba(0,0,0,.3);
+  --dawn-a:#5A4A4A; --dawn-b:#3E3C3A; --day-a:#3C5866; --day-b:#2A3B35; --dusk-a:#5E4436; --dusk-b:#3F3546; --night-a:#0C1220; --night-b:#18213A;
+  --dim:#000; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 104px}
+.wrap{max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:700;margin:0;text-wrap:balance}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.num{font-variant-numeric:tabular-nums}
+
+/* top bar */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.top h1{font-size:1.5rem;letter-spacing:-.02em;line-height:1.1}
+.time-pill{position:absolute;left:16px;top:14px;z-index:3;display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--ink);background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(6px);border-radius:99px;padding:5px 11px 5px 9px}
+.time-pill i{width:8px;height:8px;border-radius:50%;background:var(--sun);display:inline-block}
+.time-pill.night i{background:#EDEAD8;box-shadow:inset -2px -1px 0 rgba(0,0,0,.25)}
+.time-pill small{color:var(--muted);font-size:.72rem}
+.dew{display:flex;align-items:center;gap:6px;font-size:.9rem;font-weight:600}
+.dew svg{width:15px;height:15px}
+.dew small{font-weight:400;color:var(--muted);font-size:.74rem}
+
+/* scene */
+.scene{position:relative;height:300px;border-radius:28px;overflow:hidden;background:var(--wall)}
+.window{position:absolute;left:50%;top:22px;width:196px;height:206px;transform:translateX(-50%);border-radius:98px 98px 6px 6px;
+  border:7px solid var(--frame);overflow:hidden;background:linear-gradient(180deg,var(--sky-a,var(--day-a)),var(--sky-b,var(--day-b)));transition:background 2s}
+.window .bar-v{position:absolute;left:50%;top:0;bottom:0;width:5px;margin-left:-2.5px;background:var(--frame)}
+.window .bar-h{position:absolute;top:56%;left:0;right:0;height:5px;background:var(--frame)}
+.orb{position:absolute;width:22px;height:22px;border-radius:50%;margin:-11px 0 0 -11px;transition:left 3s linear,top 3s linear}
+.orb.sun{background:var(--sun);box-shadow:0 0 22px var(--sun)}
+.orb.moon{background:#EDEAD8;box-shadow:inset -6px -2px 0 rgba(0,0,0,.18)}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.8}
+.sill{position:absolute;left:0;right:0;bottom:0;height:46px;background:var(--paper);border-top:1px solid var(--line)}
+.dimmer{position:absolute;inset:0;background:var(--dim);pointer-events:none;transition:opacity 2s;opacity:0}
+.plant{position:absolute;left:50%;bottom:22px;width:220px;height:253px;transform:translateX(-50%);--hole:var(--sky-b,var(--day-b))}
+.plant svg{width:100%;height:100%;display:block}
+.sway{transform-origin:100px 160px;animation:sway 8s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}
+.drop{position:absolute;width:6px;height:9px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:var(--water);top:30px;animation:fall .9s ease-in forwards}
+@keyframes fall{to{transform:translateY(150px);opacity:0}}
+.spark{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--feed);bottom:70px;animation:rise 1.3s ease-out forwards}
+@keyframes rise{to{transform:translateY(-120px) scale(.3);opacity:0}}
+
+/* plant identity */
+.ident{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-top:-6px}
+.ident h2{font-size:1.5rem;line-height:1.2}
+.ident .latin{font-style:italic;color:var(--muted);font-size:.8rem}
+.ident input{font-family:var(--f-display);font-size:1.3rem;font-weight:700;width:100%;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:2px 8px}
+.mini-btns{display:flex;gap:4px;flex:none}
+.icon-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;display:grid;place-items:center;color:var(--muted)}
+.icon-btn svg{width:16px;height:16px}
+.stage-line{display:flex;gap:4px;margin-top:10px}
+.stage-line span{flex:1;height:4px;border-radius:4px;background:var(--line);position:relative;overflow:hidden}
+.stage-line span i{position:absolute;inset:0;width:0;background:var(--grow);border-radius:4px;transition:width .6s}
+.stage-names{display:flex;justify-content:space-between;font-size:.68rem;color:var(--muted);margin-top:4px}
+.stage-names b{color:var(--ink);font-weight:600}
+
+/* vitals */
+.vitals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.vital{padding:12px 12px 11px;border-radius:16px;background:var(--paper);display:flex;flex-direction:column;gap:2px;min-width:0}
+.vital .k{font-size:.72rem;color:var(--muted);display:flex;align-items:center;gap:5px}
+.vital .k i{width:6px;height:6px;border-radius:50%}
+.vital .v{font-family:var(--f-display);font-size:1.3rem;font-weight:700;line-height:1.25}
+.vital .s{font-size:.74rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vital .s.warn{color:var(--warn);font-weight:600}
+.vital .bar{position:relative;height:4px;border-radius:4px;background:var(--line);margin-top:6px}
+.vital .bar span{position:absolute;top:0;bottom:0;border-radius:4px}
+.vital .bar .band{background:color-mix(in srgb,var(--ink) 14%,transparent)}
+.note{font-size:.86rem;color:var(--muted);min-height:1.4em;padding:0 2px}
+.note b{color:var(--ink);font-weight:600}
+
+/* dock */
+.dock{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.act{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 6px 10px;text-align:center;white-space:nowrap;border-radius:16px;border:1px solid var(--line);background:var(--paper);font-size:.88rem;font-weight:500;transition:transform .12s}
+.act:active{transform:scale(.97)}
+.act svg{width:20px;height:20px;flex:none}
+.act small{display:block;font-size:.68rem;color:var(--muted);font-weight:400;line-height:1.1}
+.act[disabled]{opacity:.45;cursor:default}
+.act.main{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.act.main small{color:var(--on-accent);opacity:.75}
+
+/* shelf */
+.sec{display:flex;flex-direction:column;gap:12px}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.sec-h h3{font-size:1.08rem}
+.sec-h small{color:var(--muted);font-size:.76rem}
+.shelf{display:flex;gap:4px;overflow-x:auto;padding:4px 2px 10px;scroll-snap-type:x proximity;border-bottom:6px solid var(--paper);box-shadow:0 1px 0 var(--line)}
+.slot{flex:none;width:76px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;padding:4px 0 2px;border:0;background:none;border-radius:12px;font-size:.72rem;--hole:var(--bg)}
+.slot svg{width:66px;height:76px}
+.slot .tag{font-size:.64rem;color:var(--muted)}
+.slot .tag.need{color:var(--warn);font-weight:600}
+.slot.on{background:var(--paper)}
+.slot.add{justify-content:center;color:var(--muted);gap:4px}
+.slot.add span:first-child{width:44px;height:44px;border-radius:50%;border:1px dashed var(--muted);display:grid;place-items:center;font-size:1.2rem}
+
+.ghost{background:none;border:0;color:var(--accent);font-weight:600;font-size:.88rem;padding:6px 0;text-align:left}
+
+/* shop */
+.filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.filters button{flex:none;border:1px solid var(--line);background:transparent;border-radius:99px;padding:6px 12px;font-size:.8rem;color:var(--muted)}
+.filters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.list{display:flex;flex-direction:column}
+.item{display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line);--hole:var(--bg)}
+.item svg{width:70px;height:80px}
+.item h4{font-size:1rem}
+.item .meta{font-size:.76rem;color:var(--muted);line-height:1.45}
+.lv{display:inline-block;font-size:.66rem;border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-right:4px;color:var(--muted)}
+.price{border:1px solid var(--accent);color:var(--accent);background:none;border-radius:99px;padding:7px 12px;font-size:.8rem;font-weight:600;white-space:nowrap}
+.price[disabled]{border-color:var(--line);color:var(--muted);cursor:default}
+
+/* book */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat{padding:12px 4px;text-align:center}
+.stat+.stat{border-left:1px solid var(--line)}
+.stat b{display:block;font-family:var(--f-display);font-size:1.25rem}
+.stat small{color:var(--muted);font-size:.68rem}
+.tabs2{display:flex;gap:18px;border-bottom:1px solid var(--line)}
+.tabs2 button{background:none;border:0;padding:8px 0;font-size:.9rem;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs2 button.on{color:var(--ink);border-color:var(--ink);font-weight:600}
+details.entry{border-bottom:1px solid var(--line);--hole:var(--bg)}
+details.entry summary{list-style:none;display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;cursor:pointer}
+details.entry summary::-webkit-details-marker{display:none}
+details.entry summary svg.p{width:52px;height:60px}
+details.entry summary .chev{width:16px;height:16px;color:var(--muted);transition:transform .2s}
+details.entry[open] summary .chev{transform:rotate(180deg)}
+details.entry .body{padding:0 0 14px 64px;font-size:.86rem;display:flex;flex-direction:column;gap:8px}
+details.entry .body ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:4px}
+.cares{display:flex;flex-wrap:wrap;gap:4px}
+.cares span{font-size:.7rem;border:1px solid var(--line);border-radius:99px;padding:1px 8px;color:var(--muted)}
+.locked{opacity:.55}
+.wrongq{padding:14px 0;border-bottom:1px solid var(--line);font-size:.86rem;display:flex;flex-direction:column;gap:6px}
+.wrongq b{font-weight:600}
+.wrongq .ans{color:var(--accent);font-weight:600}
+.wrongq p{margin:0;color:var(--muted)}
+.log{display:flex;flex-direction:column}
+.log div{display:grid;grid-template-columns:86px minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.84rem}
+.log time{color:var(--muted);font-size:.74rem}
+.save-box{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:16px;background:var(--paper);font-size:.84rem}
+.save-box p{margin:0;color:var(--muted)}
+.save-box textarea{width:100%;min-height:76px;font:inherit;font-size:.74rem;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg);color:var(--ink);resize:vertical;word-break:break-all}
+.save-box .btns{display:flex;gap:6px;flex-wrap:wrap}
+.chip-btn{border:1px solid var(--line);background:var(--wall);border-radius:99px;padding:7px 12px;font-size:.8rem}
+.chip-btn.solid{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.welcome{display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:16px;background:var(--paper)}
+.welcome svg{width:28px;height:28px;flex:none}
+.welcome b{display:block;font-size:.95rem}
+.welcome span{font-size:.82rem;color:var(--muted)}
+.empty{color:var(--muted);font-size:.86rem;padding:18px 0}
+
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--bg);border-top:1px solid var(--line);
+  padding:6px max(16px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+nav .in{max-width:440px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+nav button{background:none;border:0;padding:8px 0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;color:var(--muted)}
+nav button svg{width:21px;height:21px}
+nav button.on{color:var(--ink);font-weight:600}
+
+/* quiz sheet */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;
+  padding:calc(24px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheet .in{max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.q-head{display:flex;align-items:center;gap:14px;--hole:var(--bg)}
+.q-head svg{width:56px;height:64px;flex:none}
+.q-head p{margin:0;font-size:.82rem;color:var(--muted)}
+.q-head h2{font-size:1.12rem}
+.q-label{font-size:.72rem;letter-spacing:.12em;color:var(--muted)}
+.q-text{font-family:var(--f-display);font-size:1.32rem;line-height:1.5;font-weight:700;margin:6px 0 0}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:13px 14px;font-size:.93rem;display:flex;gap:12px;align-items:center}
+.opt .k{flex:none;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:.72rem;color:var(--muted)}
+.opt.right{border-color:var(--grow);box-shadow:inset 0 0 0 1px var(--grow)}
+.opt.right .k{background:var(--grow);border-color:var(--grow);color:var(--on-accent)}
+.opt.wrong{border-color:var(--warn)}
+.opt.wrong .k{background:var(--warn);border-color:var(--warn);color:var(--on-accent)}
+.opt.dim{opacity:.5}
+.opt[disabled]{cursor:default}
+.explain{font-size:.9rem;line-height:1.65;padding:14px 16px;border-radius:14px;background:var(--paper);border:1px solid var(--line)}
+.explain b{display:block;margin-bottom:4px}
+.explain .gain{color:var(--water);font-weight:600}
+.q-foot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.link{background:none;border:0;color:var(--muted);font-size:.84rem;text-decoration:underline;text-underline-offset:3px;padding:6px 0}
+.cta{background:var(--accent);color:var(--on-accent);border:0;border-radius:14px;padding:13px 20px;font-weight:600}
+
+.toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:.85rem;opacity:0;transition:all .3s;z-index:30;max-width:calc(100% - 32px);text-align:center;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion: reduce){.sway{animation:none}.drop,.spark{display:none}.orb,.window,.dimmer{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>파릇</h1>
+    <div class="dew num" title="이슬은 퀴즈와 공부 타이머로 모아요"><svg viewBox="0 0 16 16"><path d="M8 1.5C8 1.5 3 7 3 10a5 5 0 0 0 10 0c0-3-5-8.5-5-8.5z" fill="var(--water)"/></svg><span id="dew">0</span><small>이슬</small></div>
+  </header>
+
+  <!-- 정원 -->
+  <section id="v-garden" class="wrap">
+    <div class="scene" id="scene">
+      <div class="window" id="win"><span class="bar-v"></span><span class="bar-h"></span></div>
+      <div class="sill"></div>
+      <div class="plant" id="plant"></div>
+      <div class="dimmer" id="dimmer"></div>
+      <div class="time-pill num" id="clock"><i></i><span></span></div>
+    </div>
+
+    <div>
+      <div class="ident">
+        <div style="min-width:0;flex:1" id="name-box"><h2 id="p-name">몬스테라</h2><div class="latin" id="p-latin"></div></div>
+        <div class="mini-btns">
+          <button class="icon-btn" id="b-rename" aria-label="이름 바꾸기" title="이름 바꾸기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10.5 2.5l3 3L6 13H3v-3z"/></svg></button>
+          <button class="icon-btn" id="b-pot" aria-label="화분 색 바꾸기" title="화분 색 바꾸기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3 6h10l-1.5 8h-7z"/><path d="M2 4h12v2H2z"/></svg></button>
+        </div>
+      </div>
+      <div class="stage-line" id="stage-line"></div>
+      <div class="stage-names" id="stage-names"></div>
+    </div>
+
+    <div class="vitals">
+      <div class="vital" id="v-water"></div>
+      <div class="vital" id="v-feed"></div>
+      <div class="vital" id="v-grow"></div>
+    </div>
+
+    <div class="dock">
+      <button class="act main" id="a-water"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h11v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/><path d="M15 11.5l5.5-4"/><path d="M6.5 10c0-2.2 1.5-4 3-4s3 1.8 3 4"/></svg><span>물 주기<small>무료</small></span></button>
+      <button class="act" id="a-feed"><svg viewBox="0 0 24 24" fill="none" stroke="var(--feed)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg><span>영양제<small>이슬 3</small></span></button>
+      <button class="act" id="a-wipe"><svg viewBox="0 0 24 24" fill="none" stroke="var(--leaf)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 13 6 12 4 5c6 0 9 4 9 9"/><path d="M13 14c0-5 3-8 7-8-1 5-4 8-7 8"/></svg><span>잎 닦기<small id="wipe-cd">무료</small></span></button>
+    </div>
+    <p class="note" id="note"></p>
+
+    <div class="sec">
+      <div class="sec-h"><h3>창가 선반</h3><small class="num" id="shelf-count"></small></div>
+      <div class="shelf" id="shelf"></div>
+    </div>
+
+    <button class="ghost" id="again">식물 문제 하나 더 풀기 →</button>
+  </section>
+
+  <!-- 가게 -->
+  <section id="v-shop" class="wrap" hidden>
+    <div class="sec-h"><h3>씨앗 가게</h3><small>퀴즈로 모은 이슬로 들여요</small></div>
+    <div class="filters" id="filters"></div>
+    <div class="list" id="shop"></div>
+  </section>
+
+  <!-- 도감 -->
+  <section id="v-book" class="wrap" hidden>
+    <div class="stats num" id="stats"></div>
+    <div class="tabs2" id="tabs2"><button data-t="dex" class="on">식물 도감</button><button data-t="wrong">오답 노트</button><button data-t="log">성장 일기</button><button data-t="save">저장</button></div>
+    <div id="book"></div>
+  </section>
+</div>
+
+<nav aria-label="화면 이동"><div class="in">
+  <button data-v="garden" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14h12l-1.5 7h-9z"/><path d="M12 14V8"/><path d="M12 10c0-3-2-5-5-5 0 3 2 5 5 5zM12 8c0-3 2-5 5-5 0 3-2 5-5 5z"/></svg>정원</button>
+  <button data-v="shop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1 11H6z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/></svg>씨앗 가게</button>
+  <button data-v="book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/></svg>도감</button>
+</div></nav>
+
+<div class="sheet" id="sheet" hidden><div class="in" id="q-in"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+/* =============== constants =============== */
+const SPEED=12;                      // 현실 1분 = 게임 12분
+const GH=3600e3/SPEED;               // 게임 1시간 = 현실 ms
+const STAGES=['씨앗','새싹','어린 식물','자란 식물','성숙'];
+const XP=[0,20,60,130,240];
+const DAY=[6,20];                    // 낮(광합성) 시간
+const POTS=['var(--pot-1)','var(--pot-2)','var(--pot-3)','var(--pot-4)','var(--pot-5)'];
+const GROUPS={all:'전체',foliage:'관엽',succulent:'다육·선인장',herb:'허브',flower:'꽃',fruit:'열매'};
+
+const SPECIES={
+ monstera:{name:'몬스테라',latin:'Monstera deliciosa',g:'foliage',cost:0,band:[40,80],dry:.75,gr:1,pot:0,final:'성숙',lv:'쉬움',
+  care:['밝은 간접광','겉흙 2~3cm 마르면','지주대'],facts:['잎의 구멍(천공)은 성숙한 잎에 생기는 정상 특징이에요.','열대우림의 반착생 덩굴이라 지주대를 세우면 잎이 커져요.','직사광선은 잎을 태워서 커튼 너머 빛이 좋아요.']},
+ pothos:{name:'스킨답서스',latin:'Epipremnum aureum',g:'foliage',cost:15,band:[35,75],dry:.7,gr:1.15,pot:1,final:'성숙',lv:'쉬움',
+  care:['반그늘 OK','겉흙 마르면','물꽂이 번식'],facts:['낮은 빛에도 잘 견뎌 초보에게 좋은 식물이에요.','마디가 있는 줄기를 물에 꽂으면 뿌리가 나와요.','빛이 부족하면 노란 무늬가 옅어져요.']},
+ pilea:{name:'필레아',latin:'Pilea peperomioides',g:'foliage',cost:20,band:[35,70],dry:.8,gr:1.1,pot:4,final:'성숙',lv:'쉬움',
+  care:['밝은 간접광','겉흙 마르면','가끔 화분 돌리기'],facts:['동전 모양 잎은 잎자루가 잎 한가운데 붙은 방패형(peltate) 잎이에요.','빛 쪽으로 잘 기울어서 일주일에 한 번 화분을 돌려주면 모양이 고르게 자라요.','뿌리 주변에서 새끼 개체가 올라와 나눠 심기 쉬워요.']},
+ calathea:{name:'칼라데아',latin:'Goeppertia orbifolia',g:'foliage',cost:50,band:[50,85],dry:1,gr:1,pot:2,final:'성숙',lv:'까다로움',
+  care:['그늘진 밝은 곳','늘 촉촉하게','높은 습도'],facts:['밤이 되면 잎을 세워 접어요. 잎자루 마디(엽침)의 팽압 변화로 생기는 수면운동이에요.','공기가 건조하면 잎 가장자리가 갈색으로 타들어가요.','수돗물의 염소와 불소에 민감해서 받아둔 물이 좋아요.']},
+ ficus:{name:'고무나무',latin:'Ficus elastica',g:'foliage',cost:35,band:[35,70],dry:.6,gr:.9,pot:2,final:'성숙',lv:'보통',
+  care:['밝은 곳','겉흙 마르면','잎 닦아주기'],facts:['새 잎은 붉은 턱잎(엽초)에 싸여 나오고, 잎이 펴지면 턱잎은 떨어져요.','상처가 나면 하얀 유액(라텍스)이 나와요. 피부에 닿으면 씻어주세요.','두꺼운 잎에 먼지가 잘 쌓여서 닦아주면 광택과 광합성이 좋아져요.']},
+ zz:{name:'금전수',latin:'Zamioculcas zamiifolia',g:'foliage',cost:30,band:[20,55],dry:.3,gr:.75,pot:3,final:'성숙',lv:'쉬움',
+  care:['어두운 곳도 OK','흙이 완전히 마르면','과습 주의'],facts:['땅속의 굵은 덩이줄기(근경)에 물을 저장해요.','잎 한 장처럼 보이는 줄기 전체가 사실은 하나의 겹잎이에요.','물을 자주 주면 덩이줄기가 물러져요. 무심하게 키우는 게 요령이에요.']},
+ sansevieria:{name:'산세베리아',latin:'Dracaena trifasciata',g:'succulent',cost:25,band:[15,50],dry:.25,gr:.8,pot:2,final:'성숙',lv:'쉬움',
+  care:['밝은 곳~그늘','흙이 완전히 마르면','겨울엔 월 1회'],facts:['CAM 광합성으로 밤에 기공을 열어 CO₂를 받아들여요.','잎에 물을 저장해서 과습이 가장 큰 적이에요.','지금은 드라세나 속으로 분류돼요.']},
+ echeveria:{name:'에케베리아',latin:'Echeveria elegans',g:'succulent',cost:30,band:[15,45],dry:.3,gr:.85,pot:1,final:'꽃대',lv:'보통',
+  care:['햇빛 많이','잎이 말랑할 때','마사토 섞은 흙'],facts:['빛이 부족하면 줄기가 웃자라요(도장).','떨어진 잎 하나에서 새 개체가 자라요(잎꽂이).','잎의 하얀 분은 햇빛을 막는 보호막이라 닦지 않아요.']},
+ cereus:{name:'기둥선인장',latin:'Cereus peruvianus',g:'succulent',cost:40,band:[10,40],dry:.15,gr:.7,pot:3,final:'꽃 핌',lv:'쉬움',
+  care:['강한 햇빛','한 달에 1~2회','모래 섞인 흙'],facts:['가시는 잎이 변한 것이라 증산으로 잃는 물을 줄여요.','줄기 주름(능)이 물을 저장하며 아코디언처럼 부풀어요.','CAM 광합성으로 낮엔 기공을 닫아요.']},
+ hoya:{name:'호야',latin:'Hoya carnosa',g:'flower',cost:50,band:[25,60],dry:.45,gr:.85,pot:4,final:'꽃 핌',lv:'보통',
+  care:['밝은 간접광','마른 듯하게','꽃대 자르지 않기'],facts:['꽃은 같은 꽃대(화경)에서 해마다 다시 피어서, 진 꽃대를 자르면 안 돼요.','두툼한 잎은 왁스층이 있어 물을 잘 지켜요.','별 모양 꽃에서 밤에 달콤한 향이 나요.']},
+ lavender:{name:'라벤더',latin:'Lavandula angustifolia',g:'flower',cost:55,band:[25,60],dry:.6,gr:.85,pot:1,final:'꽃 핌',lv:'보통',
+  care:['직사광선','마른 듯하게','약알칼리 흙'],facts:['지중해 원산이라 햇빛·통풍·배수가 중요해요.','향은 잎과 꽃의 샘털 속 정유에서 나와요.','꽃이 진 뒤 가볍게 잘라주면 다음 꽃이 잘 펴요.']},
+ sunflower:{name:'해바라기',latin:'Helianthus annuus',g:'flower',cost:60,band:[50,90],dry:1.6,gr:1.5,pot:3,final:'꽃 핌',lv:'보통',
+  care:['하루 종일 햇빛','흙 촉촉하게','깊은 화분'],facts:['어릴 때는 해를 따라 동쪽에서 서쪽으로 고개를 돌려요(굴광성 일주운동).','다 자라면 동쪽을 향해 고정돼요. 아침 햇살로 꽃이 데워져 벌이 더 찾아와요.','꽃 하나처럼 보이지만 수백~수천 개의 작은 꽃이 모인 두상화예요.']},
+ basil:{name:'바질',latin:'Ocimum basilicum',g:'herb',cost:20,band:[50,90],dry:1.6,gr:1.4,pot:0,final:'꽃 핌',lv:'쉬움',
+  care:['하루 6시간 햇빛','흙 촉촉하게','윗순 따주기'],facts:['윗순을 따면(적심) 곁가지가 나와 풍성해져요.','꽃이 피면 잎이 질겨져서 꽃대는 일찍 따요.','10℃ 아래에선 잎이 검게 상해요.']},
+ rosemary:{name:'로즈마리',latin:'Salvia rosmarinus',g:'herb',cost:35,band:[30,60],dry:.6,gr:.9,pot:4,final:'꽃 핌',lv:'보통',
+  care:['직사광선','겉흙 마르면','통풍 중요'],facts:['바늘 같은 잎은 표면적이 작아 물을 덜 잃어요.','통풍이 나쁘면 흰가루병이 잘 생겨요.','최근 세이지와 같은 살비아 속으로 옮겨졌어요.']},
+ tomato:{name:'방울토마토',latin:'Solanum lycopersicum',g:'fruit',cost:45,band:[55,90],dry:1.8,gr:1.3,pot:3,final:'열매',lv:'보통',
+  care:['하루 8시간 햇빛','물 자주','지주대'],facts:['꽃 하나에 암술과 수술이 같이 있어 스스로 꽃가루받이해요. 살짝 흔들어주면 열매가 잘 맺혀요.','잎겨드랑이에서 나오는 곁순을 따주면 열매에 양분이 몰려요.','물을 들쭉날쭉 주면 열매가 갈라져요.']},
+ strawberry:{name:'딸기',latin:'Fragaria × ananassa',g:'fruit',cost:45,band:[50,85],dry:1.3,gr:1.15,pot:4,final:'열매',lv:'보통',
+  care:['햇빛 많이','흙 촉촉하게','러너 정리'],facts:['겉의 깨알 같은 것이 진짜 열매(수과)이고, 빨간 부분은 부푼 꽃받기예요.','기는줄기(러너)를 뻗어 새 포기를 만드는 무성생식을 해요.','러너를 잘라주면 원래 포기의 열매가 커져요.']}
+};
+const SP_KEYS=Object.keys(SPECIES);
+
+const QUIZ=[
+ {q:'식물이 잎의 기공으로 물을 수증기 형태로 내보내는 현상은?',o:['증산 작용','광합성','세포 호흡','굴광성'],a:0,e:'증산으로 잎에서 물이 빠져나가면 뿌리부터 이어진 물기둥이 위로 끌려 올라가요.'},
+ {q:'선인장과 다육식물이 밤에 기공을 열어 CO₂를 저장해 두는 광합성 방식은?',o:['C3 광합성','C4 광합성','CAM 광합성','질소 고정'],a:2,e:'낮엔 기공을 닫아 수분 손실을 줄이고, 밤에 저장한 CO₂를 낮에 캘빈 회로로 써요.'},
+ {q:'잎이 노래지고 흙에서 퀴퀴한 냄새가 날 때 가장 흔한 원인은?',o:['햇빛 과다','과습으로 인한 뿌리 썩음','비료 부족','통풍 과다'],a:1,e:'흙이 계속 젖어 있으면 뿌리가 산소를 못 받아 썩어요.'},
+ {q:'비료의 N-P-K 중 잎과 줄기 성장에 가장 크게 관여하는 성분은?',o:['질소(N)','인(P)','칼륨(K)','칼슘(Ca)'],a:0,e:'질소는 엽록소와 단백질의 재료라 부족하면 아래 잎부터 노래져요.'},
+ {q:'꽃과 뿌리 발달에 특히 중요한 비료 성분은?',o:['질소(N)','인(P)','철(Fe)','마그네슘(Mg)'],a:1,e:'인은 ATP·핵산의 구성 성분이라 뿌리 발달과 개화에 중요해요.'},
+ {q:'엽록소가 가장 잘 흡수하는 빛의 색은?',o:['초록색','노란색','청색과 적색','적외선만'],a:2,e:'청색과 적색을 흡수하고 초록을 반사해서 잎이 초록으로 보여요.'},
+ {q:'식물이 빛 쪽으로 휘어 자라게 만드는 주된 호르몬은?',o:['에틸렌','옥신','앱시스산','시토키닌'],a:1,e:'옥신이 그늘진 쪽으로 이동해 그쪽 세포를 더 늘려요.'},
+ {q:'몬스테라 잎에 구멍(천공)이 생기는 이유로 맞는 것은?',o:['해충 피해','영양 결핍','잎이 성숙하면서 생기는 정상 특징','과습'],a:2,e:'어린 잎은 통잎이고, 충분한 빛을 받은 성숙한 잎에 구멍이 생겨요.'},
+ {q:'화분에 물을 줄 때 일반적으로 권장되는 방법은?',o:['매일 조금씩','배수구로 물이 나올 만큼 흠뻑','잎에만 분무','받침에 물을 고여 둠'],a:1,e:'흠뻑 줘서 흙 전체를 적시고, 받침에 고인 물은 버려요.'},
+ {q:'바질의 윗순을 따주면(적심) 어떤 일이 생길까?',o:['성장이 멈춘다','곁가지가 늘어 풍성해진다','꽃이 빨리 핀다','잎이 작아진다'],a:1,e:'정단 우세가 깨지면서 아래 곁눈이 자라나요.'},
+ {q:'광합성의 산물로 맞는 조합은?',o:['포도당과 산소','이산화탄소와 물','산소와 질소','포도당과 이산화탄소'],a:0,e:'6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂. 산소는 물이 분해될 때 나와요.'},
+ {q:'광합성의 명반응이 일어나는 장소는?',o:['스트로마','틸라코이드 막','미토콘드리아 기질','세포벽'],a:1,e:'광계와 전자전달계가 틸라코이드 막에 있어요.'},
+ {q:'캘빈 회로(탄소 고정)가 일어나는 장소는?',o:['틸라코이드 내강','스트로마','세포질','액포'],a:1,e:'루비스코가 스트로마에서 CO₂를 고정해요.'},
+ {q:'뿌리털의 가장 중요한 역할은?',o:['광합성','표면적을 넓혀 물과 무기염류 흡수','양분 저장','지지'],a:1,e:'뿌리털이 흡수 면적을 크게 늘려요. 분갈이 몸살은 뿌리털이 상해서 생겨요.'},
+ {q:'물이 물관을 따라 높이 올라가는 원리로 가장 널리 받아들여지는 설은?',o:['응집-장력설','삼투압만으로','체관 압류설','중력'],a:0,e:'증산이 만든 장력이 응집력으로 이어진 물기둥을 끌어올려요.'},
+ {q:'체관이 주로 운반하는 것은?',o:['물','무기염류','광합성으로 만든 당','산소'],a:2,e:'잎(공급원)에서 만든 설탕을 뿌리·열매(수용부)로 보내요.'},
+ {q:'과일 숙성과 잎이 떨어지는 것을 촉진하는 기체 호르몬은?',o:['옥신','지베렐린','에틸렌','앱시스산'],a:2,e:'바나나 옆 과일이 빨리 익는 것도 에틸렌 때문이에요.'},
+ {q:'가뭄 때 기공을 닫게 만드는 호르몬은?',o:['앱시스산(ABA)','시토키닌','옥신','지베렐린'],a:0,e:'ABA가 공변세포의 팽압을 낮춰 기공을 닫아요.'},
+ {q:'에케베리아 줄기가 길게 웃자라고 잎 사이가 벌어진다면?',o:['물이 부족','빛이 부족','비료 과다','온도가 너무 낮음'],a:1,e:'빛을 찾아 줄기가 늘어나는 도장 현상이에요.'},
+ {q:'식물 잎에 쌓인 먼지를 닦아주면 좋은 이유는?',o:['향이 좋아져서','빛 흡수와 기체 교환을 돕기 위해','해충이 더 꼬여서','잎이 단단해져서'],a:1,e:'먼지가 빛을 가리고 기공을 막아 광합성 효율을 떨어뜨려요.'},
+ {q:'겨울철 실내 식물의 물주기는 보통 어떻게 바꿀까?',o:['횟수를 늘린다','횟수를 줄인다','얼음물을 준다','그대로 둔다'],a:1,e:'빛과 온도가 낮아 성장과 증산이 느려지니까요.'},
+ {q:'뿌리가 중력 방향으로 자라는 성질은?',o:['굴광성','굴지성(중력굴성)','굴촉성','경성'],a:1,e:'뿌리골무의 평형석(녹말 입자)이 중력을 감지해요.'},
+ {q:'콩과식물 뿌리혹에 사는 박테리아가 하는 일은?',o:['광합성','질소 고정','인 분해','병원균 퇴치'],a:1,e:'공기 중 N₂를 식물이 쓰는 암모니아 형태로 바꿔줘요.'},
+ {q:'물이 부족해 잎이 축 처질 때, 세포 안에서 낮아진 것은?',o:['팽압','온도','엽록소 양','당 농도'],a:0,e:'액포의 물이 줄면 세포벽을 미는 팽압이 떨어져 시들어요.'},
+ {q:'분갈이가 필요하다는 가장 확실한 신호는?',o:['잎이 반짝인다','배수구로 뿌리가 삐져나온다','새 잎이 났다','꽃이 피었다'],a:1,e:'뿌리가 화분을 꽉 채우면 흡수가 어려워져요. 봄이 적기예요.'},
+ {q:'선인장의 가시는 원래 어떤 기관이 변한 것일까?',o:['줄기','잎','뿌리','꽃잎'],a:1,e:'잎이 가시로 바뀌어 증산 면적을 줄였고, 광합성은 줄기가 맡아요.'},
+ {q:'잎 뒷면에 거미줄 같은 것과 작은 점들이 보인다면 의심할 해충은?',o:['진딧물','응애','깍지벌레','뿌리파리'],a:1,e:'응애는 건조할 때 잘 생겨요. 잎 뒷면을 물로 씻어주면 줄어요.'},
+ {q:'흙 위에 작은 날벌레(뿌리파리)가 날아다니는 주된 원인은?',o:['흙이 계속 축축함','햇빛 과다','화분이 너무 큼','온도가 낮음'],a:0,e:'유충이 젖은 흙에서 자라요. 겉흙을 말리면 줄어요.'},
+ {q:'식물이 밤에 하는 일로 맞는 것은?',o:['광합성만 한다','호흡만 하고 광합성은 거의 안 한다','아무것도 안 한다','산소만 내뿜는다'],a:1,e:'호흡은 낮밤 계속되고, 빛이 없으면 광합성이 멈춰요.'},
+ {q:'광합성 속도에 영향을 주는 요인이 아닌 것은?',o:['빛의 세기','CO₂ 농도','온도','화분의 색깔'],a:3,e:'가장 부족한 요인이 전체 속도를 정해요(제한 요인).'},
+ {q:'칼라데아가 밤에 잎을 세워 접는 움직임은?',o:['굴광성','수면운동(취면운동)','굴지성','증산'],a:1,e:'잎자루 끝 엽침 세포의 팽압이 하루 리듬에 따라 바뀌면서 생겨요.'},
+ {q:'딸기에서 깨알처럼 박힌 것의 정체는?',o:['씨앗만 있는 것','진짜 열매(수과)','꽃가루','털'],a:1,e:'각각이 씨 하나를 품은 열매이고, 빨간 과육은 부푼 꽃받기예요.'},
+ {q:'딸기가 기는줄기(러너)로 새 포기를 만드는 방식은?',o:['유성생식','무성생식(영양번식)','포자생식','접목'],a:1,e:'부모와 유전적으로 같은 클론이 생겨요.'},
+ {q:'어린 해바라기가 해를 따라 고개를 돌리는 데 관여하는 것은?',o:['줄기 양쪽의 성장 속도 차이','꽃잎의 근육','뿌리 회전','에틸렌 분출'],a:0,e:'낮엔 동쪽 면이, 밤엔 서쪽 면이 더 자라면서 고개가 움직여요. 생체시계가 조절해요.'},
+ {q:'해바라기 꽃 한 송이처럼 보이는 것의 실제 구조는?',o:['꽃 한 개','수많은 작은 꽃이 모인 두상화','잎이 변한 것','열매 덩어리'],a:1,e:'바깥 혀꽃과 안쪽 대롱꽃 수백~수천 개가 모여 있어요.'},
+ {q:'방울토마토 꽃을 살짝 흔들어 주면 좋은 이유는?',o:['해충을 쫓으려고','꽃가루가 떨어져 수분이 잘 되게','물을 털어내려고','꽃을 크게 하려고'],a:1,e:'양성화라 자가수분하는데, 진동이 있어야 꽃가루가 잘 나와요(뒤영벌의 진동수분).'},
+ {q:'금전수가 물을 자주 안 줘도 버티는 이유는?',o:['잎이 바늘 모양이라서','땅속 덩이줄기에 물을 저장해서','공기 중 수분만 흡수해서','광합성을 안 해서'],a:1,e:'굵은 근경이 물탱크 역할을 해요. 그래서 과습에 약해요.'},
+ {q:'고무나무 줄기에 상처가 나면 나오는 하얀 액체는?',o:['수액(물)','라텍스(유액)','꿀','송진'],a:1,e:'초식동물과 병원균을 막는 방어 물질이에요.'},
+ {q:'호야 꽃이 진 뒤 꽃대(화경)를 남겨두는 이유는?',o:['씨앗이 생겨서','같은 꽃대에서 다시 꽃이 피어서','물을 저장해서','뿌리가 돼서'],a:1,e:'호야는 같은 꽃대에서 해마다 꽃을 피워요.'},
+ {q:'낮 길이(밤 길이)에 반응해 꽃을 피우는 성질은?',o:['광주기성','굴광성','춘화처리','휴면'],a:0,e:'피토크롬이 빛을 감지해요. 사실은 연속된 밤의 길이가 기준이에요.'}
+];
+
+/* =============== state =============== */
+const LS='small-greenhouse-v1';
+let pendingAway=null;
+const dayKey=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+function fresh(){const now=Date.now();return{v:2,savedAt:now,start:now,dew:10,streak:0,lastQuizDay:null,answered:0,correct:0,seen:[],wrong:[],log:[],lastSeen:now,active:'p1',
+  plants:[{id:'p1',sp:'monstera',xp:24,water:55,feed:45,lastTick:now,lastWater:now,lastWipe:0,born:now,nick:'',pot:0}]}}
+function migrate(s){
+  if(!s||!s.plants||!s.plants.length)return fresh();
+  s.v=2; s.start=s.start||Math.min(...s.plants.map(p=>p.born||Date.now()));
+  s.answered=s.answered??((s.quizzes||0)*3); s.correct=s.correct||0; s.seen=s.seen||[]; s.wrong=s.wrong||[]; s.log=s.log||[]; delete s.timer;
+  s.plants.forEach(p=>{if(p.nick==null)p.nick='';if(p.pot==null)p.pot=SPECIES[p.sp]?SPECIES[p.sp].pot:0;});
+  s.plants=s.plants.filter(p=>SPECIES[p.sp]); if(!s.plants.length)return fresh();
+  return s;
+}
+let S=null;try{S=JSON.parse(localStorage.getItem(LS)||'null')}catch(e){}
+S=migrate(S);
+
+let dbDoc=null,saveT=null;
+function save(now){S.savedAt=Date.now();try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}
+  clearTimeout(saveT);const push=()=>{if(dbDoc)dbDoc.set(JSON.parse(JSON.stringify(S))).catch(()=>{})};if(now)push();else saveT=setTimeout(push,900)}
+function exportCode(){try{return 'GH2.'+btoa(unescape(encodeURIComponent(JSON.stringify(S))))}catch(e){return''}}
+function importCode(code){try{code=(code||'').trim().replace(/\s+/g,'');if(!code.startsWith('GH2.'))return null;const o=JSON.parse(decodeURIComponent(escape(atob(code.slice(4)))));return o&&o.plants&&o.plants.length?migrate(o):null}catch(e){return null}}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist().catch(()=>{})}catch(e){}
+(async()=>{try{
+  if(!window.claude||!window.claude.use)return;
+  const [db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
+  if(!db||!user)return; const id=await user.id(); if(!id)return;
+  dbDoc=db.collection('data/users/'+id).doc('garden');
+  const snap=await dbDoc.get();
+  if(snap.exists){const r=snap.data();if(r&&r.plants&&r.savedAt>(S.savedAt||0)){S=migrate(JSON.parse(JSON.stringify(r)));tick();renderAll();try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}return}}
+  save();
+}catch(e){}})();
+
+/* =============== game time =============== */
+const gameHours=t=>(t-S.start)/GH+6;                // 1일째 오전 6시에 시작
+const hourOfDay=gh=>((gh%24)+24)%24;
+const isDay=gh=>{const h=hourOfDay(gh);return h>=DAY[0]&&h<DAY[1]};
+function clockText(t){const gh=gameHours(t),d=Math.floor(gh/24)+1,h=hourOfDay(gh),hh=Math.floor(h),mm=Math.floor((h-hh)*6)*10;
+  const ap=hh<12?'오전':'오후',h12=hh%12===0?12:hh%12;return `${d}일째 · ${ap} ${h12}:${String(mm).padStart(2,'0')}`}
+function shortStamp(t){const gh=gameHours(t),d=Math.floor(gh/24)+1,hh=Math.floor(hourOfDay(gh));return `${d}일째 ${hh<12?'오전':'오후'} ${hh%12===0?12:hh%12}시`}
+function fmtGame(gh){if(gh<1)return'1시간 안';if(gh<24)return Math.round(gh)+'시간';const d=gh/24;return(d<10?d.toFixed(1).replace(/\.0$/,''):Math.round(d))+'일'}
+function fmtReal(gh){const m=gh*60/SPEED;if(m<1)return'1분 안';if(m<60)return Math.round(m)+'분';const h=Math.floor(m/60),r=Math.round(m%60);return r?`${h}시간 ${r}분`:`${h}시간`}
+function phase(gh){const h=hourOfDay(gh);if(h>=5&&h<7)return'dawn';if(h>=7&&h<17.5)return'day';if(h>=17.5&&h<20)return'dusk';return'night'}
+
+/* =============== simulation =============== */
+const stageOf=xp=>{let s=0;for(let i=0;i<XP.length;i++)if(xp>=XP[i])s=i;return{s,p:s>=4?1:(xp-XP[s])/(XP[s+1]-XP[s])}};
+const inBand=(sp,w)=>w>=sp.band[0]&&w<=sp.band[1];
+function stepPlant(p,sp,h,gh){
+  const day=isDay(gh);
+  p.water=Math.max(0,p.water-sp.dry*h*(day?1:.5));   // 밤엔 기공이 닫혀 증산이 줄어요
+  p.feed=Math.max(0,p.feed-.4*h);
+  if(day&&inBand(sp,p.water)&&p.feed>15)p.xp+=h*sp.gr*(p.feed>=50?1.5:1);
+}
+function tick(){
+  const now=Date.now();
+  S.plants.forEach(p=>{
+    const sp=SPECIES[p.sp],before=stageOf(p.xp).s;
+    let t=Math.max(p.lastTick,now-30*24*GH);
+    while(t<now){const dt=Math.min(.5*GH,now-t);stepPlant(p,sp,dt/GH,gameHours(t));t+=dt}
+    p.lastTick=now;
+    const after=stageOf(p.xp).s; if(after>before)stageUp(p,after,true);
+  });
+}
+function forecast(p){
+  const sp=SPECIES[p.sp],st=stageOf(p.xp),now=Date.now();
+  let gh=gameHours(now),w=p.water,f=p.feed,xp=p.xp,h=0;
+  const res={water:null,feed50:null,feed15:null,stage:null};
+  const target=st.s<4?XP[st.s+1]:null;
+  if(w<sp.band[0])res.water=0;
+  if(f<50)res.feed50=0; if(f<=15)res.feed15=0;
+  while(h<24*40&&(res.water===null||res.feed15===null||(target&&res.stage===null))){
+    const day=isDay(gh+h);
+    w=Math.max(0,w-sp.dry*.25*(day?1:.5)); f=Math.max(0,f-.4*.25);
+    if(res.water===null&&w<sp.band[0])res.water=h;
+    if(res.feed50===null&&f<50)res.feed50=h;
+    if(res.feed15===null&&f<=15)res.feed15=h;
+    // 성장 예측: 물은 알맞게 유지한다고 가정, 영양은 그대로 둘 때(15 이하로 떨어지면 최소 유지)
+    if(target&&res.stage===null){if(day)xp+=.25*sp.gr*(f>=50?1.5:1);if(xp>=target)res.stage=h}
+    h+=.25;
+  }
+  return res;
+}
+
+/* =============== drawing =============== */
+function rng(seed){let a=0;for(const c of String(seed))a=(a*31+c.charCodeAt(0))>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const f1=n=>(+n).toFixed(1);
+const leafD=(L,W)=>`M0 0 C${f1(W*.6)} ${f1(-L*.25)} ${f1(W*.55)} ${f1(-L*.8)} 0 ${f1(-L)} C${f1(-W*.55)} ${f1(-L*.8)} ${f1(-W*.6)} ${f1(-L*.25)} 0 0Z`;
+const heartD=(L,W)=>`M0 0 C${f1(W*.95)} ${f1(-L*.05)} ${f1(W*.8)} ${f1(-L*.9)} 0 ${f1(-L)} C${f1(-W*.8)} ${f1(-L*.9)} ${f1(-W*.95)} ${f1(-L*.05)} 0 0Z`;
+function leaf(x,y,a,L,W,fill,shape,rib,extra){return `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(a)})"><path d="${(shape||leafD)(L,W)}" fill="${fill}"${extra||''}/>${rib===false?'':`<path d="M0 -1.5 L0 ${f1(-L*.85)}" stroke="var(--stem)" stroke-width=".9" opacity=".5" fill="none"/>`}</g>`}
+function stem(x0,y0,x1,y1,bend,w,col){return `<path d="M${f1(x0)} ${f1(y0)} Q${f1((x0+x1)/2+bend)} ${f1((y0+y1)/2)} ${f1(x1)} ${f1(y1)}" stroke="${col||'var(--stem)'}" stroke-width="${w||2.4}" fill="none" stroke-linecap="round"/>`}
+const lerp=(a,b,t)=>a+(b-a)*t;
+function flower5(x,y,r,col,center){let o=`<g transform="translate(${f1(x)} ${f1(y)})">`;for(let k=0;k<5;k++)o+=`<ellipse rx="${f1(r*.45)}" ry="${f1(r)}" cy="${f1(-r*.7)}" fill="${col}" transform="rotate(${k*72})"/>`;return o+`<circle r="${f1(r*.4)}" fill="${center||'var(--sun)'}"/></g>`}
+
+function drawPlant(k,s,p,seed,night){
+  const R=rng(seed+k),bx=100,by=160,t=(s+p)/4,g=.35+.65*t;let o='';
+  if(s===0){const h=6+10*p;o+=stem(bx,by,bx,by-h,1.5,2);o+=leaf(bx,by-h,-55,7+4*p,6+3*p,'var(--leaf-2)',leafD,false)+leaf(bx,by-h,55,7+4*p,6+3*p,'var(--leaf-2)',leafD,false);return o}
+  switch(k){
+  case'monstera':{const n=[0,2,3,5,6][s]+(p>.6&&s<4?1:0);
+    for(let i=0;i<n;i++){const a=(-55+110*(n===1?.5:i/(n-1)))+(R()-.5)*14,L=(32+R()*30)*g,rad=a*Math.PI/180,x=bx+Math.sin(rad)*L,y=by-Math.cos(rad)*L;
+      o+=stem(bx+(R()-.5)*6,by,x,y,(R()-.5)*14,2.4);const ll=(22+R()*14)*g+6,la=a+(a>0?28:-28);
+      o+=`<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(la)})"><path d="${heartD(ll,ll*.85)}" fill="${i%2?'var(--leaf)':'var(--leaf-2)'}"/><path d="M0 -2 L0 ${f1(-ll*.88)}" stroke="var(--stem)" stroke-width="1" opacity=".5"/>`;
+      if(s>=3&&(i%2===0||s===4)){for(let q=1;q<=3;q++){const yy=-ll*q/4.2,ww=ll*.42*(1-Math.abs(q-2)*.15);o+=`<path d="M${f1(ww*.35)} ${f1(yy)} L${f1(ww)} ${f1(yy-3)} M${f1(-ww*.35)} ${f1(yy)} L${f1(-ww)} ${f1(yy-3)}" stroke="var(--hole)" stroke-width="2.6" stroke-linecap="round"/>`}}
+      o+='</g>'}break}
+  case'pothos':case'hoya':{const hoya=k==='hoya',v=hoya?[0,1,2,2,3][s]:[0,1,2,3,4][s];
+    for(let i=0;i<4;i++){const a=-30+20*i+(R()-.5)*10;o+=hoya?leaf(bx+(i-1.5)*5,by-2,a,(10+R()*5)*g+6,8*g+4,'var(--leaf-deep)'):leaf(bx+(i-1.5)*5,by-2,a,(12+R()*6)*g+4,11*g+4,i%2?'var(--leaf-var)':'var(--leaf)',heartD)}
+    for(let i=0;i<v;i++){const side=i%2?1:-1,len=(20+28*t+R()*10)*(s>=3?1.3:1),x0=bx+side*8,y0=by-4,x1=bx+side*(48+R()*8),y1=by-2,x2=x1+side*(4+R()*6),y2=by+len;
+      o+=`<path d="M${x0} ${y0} Q${(x0+x1)/2} ${by-18} ${f1(x1)} ${y1} Q${f1(x1+side*6)} ${f1((y1+y2)/2)} ${f1(x2)} ${f1(y2)}" stroke="var(--stem)" stroke-width="1.5" fill="none"/>`;
+      const n=Math.max(2,Math.round(len/12));
+      for(let j=0;j<=n;j++){const yy=lerp(y1,y2,j/n),xx=lerp(x1,x2,j/n)+side*2;
+        o+=hoya?leaf(xx,yy,side*(j%2?115:70)+(R()-.5)*20,11+R()*3,7.5,'var(--leaf-deep)',leafD,false,` stroke="var(--leaf-2)" stroke-width=".6"`):leaf(xx,yy,side*(j%2?120:70)+(R()-.5)*20,10+R()*3,9,j%3===1?'var(--leaf-var)':'var(--leaf)',heartD,false)}
+      if(hoya&&s===4&&i===0){const cx=x1+side*10,cy=lerp(y1,y2,.45);o+=`<path d="M${f1(x1)} ${f1(cy-6)} L${f1(cx)} ${f1(cy)}" stroke="var(--stem)" stroke-width="1"/>`;for(let q=0;q<8;q++){const aa=q/8*Math.PI*2;o+=flower5(cx+Math.cos(aa)*6,cy+Math.sin(aa)*5,2.6,'var(--flower)','var(--fruit)')}}
+    }break}
+  case'sansevieria':{const n=[0,2,3,5,7][s];
+    for(let i=0;i<n;i++){const x=bx+(i-(n-1)/2)*7+(R()-.5)*3,H=(45+R()*45)*g,lean=(x-bx)*.5+(R()-.5)*8,w=5+R()*2;
+      o+=`<path d="M${f1(x-w)} ${by} C${f1(x-w)} ${f1(by-H*.5)} ${f1(x+lean-w*.6)} ${f1(by-H*.8)} ${f1(x+lean)} ${f1(by-H)} C${f1(x+lean+w*.6)} ${f1(by-H*.8)} ${f1(x+w)} ${f1(by-H*.5)} ${f1(x+w)} ${by}Z" fill="${i%2?'var(--leaf)':'var(--leaf-2)'}" stroke="var(--leaf-var)" stroke-width="1.3"/>`;
+      for(let q=1;q<4;q++){const yy=by-H*q/4;o+=`<path d="M${f1(x-w*.7+lean*q/6)} ${f1(yy)} q${f1(w*.7)} -3 ${f1(w*1.4)} 0" stroke="var(--stem)" stroke-width="1" opacity=".45" fill="none"/>`}}break}
+  case'echeveria':{const rings=[0,1,2,3,3][s],sc=g*1.15;
+    if(s===4){o+=`<path d="M${bx} ${by-10} Q${bx+18} ${by-60} ${bx+30} ${by-78}" stroke="var(--succ-tip)" stroke-width="2" fill="none"/>`;for(let q=0;q<5;q++)o+=`<circle cx="${f1(bx+16+q*3.4)}" cy="${by-48-q*7}" r="3" fill="var(--flower)"/>`}
+    for(let r=rings;r>=1;r--){const cnt=4+r*2,L=(10+r*9)*sc;for(let i=0;i<cnt;i++){const a=-80+160*i/(cnt-1);o+=`<g transform="translate(${bx} ${by-2}) rotate(${f1(a)})"><path d="${leafD(L,L*.6)}" fill="var(--succ)" stroke="var(--succ-tip)" stroke-width=".8" opacity="${(.75+.08*(rings-r)).toFixed(2)}"/></g>`}}
+    o+=`<g transform="translate(${bx} ${by-2})"><path d="${leafD(10*sc,7*sc)}" fill="var(--succ)"/></g>`;break}
+  case'basil':case'tomato':{const tom=k==='tomato',H=22+(tom?100:88)*t,nodes=Math.max(1,Math.round(1+s*1.6+p));
+    if(tom&&s>=2)o+=`<path d="M${bx+14} ${by} L${bx+14} ${f1(by-H-6)}" stroke="var(--wood)" stroke-width="2"/>`;
+    o+=stem(bx,by,bx+(R()-.5)*6,by-H,(R()-.5)*6,tom?3:2.6);
+    for(let i=1;i<=nodes;i++){const y=by-H*i/(nodes+.6),L=(14+10*(1-i/(nodes+1)))*Math.max(.7,g)+4;
+      if(tom){const side=i%2?1:-1,ex=bx+side*(16+L*.4),ey=y-6;o+=stem(bx,y,ex,ey,0,1.4);for(let q=0;q<3;q++){const lx=lerp(bx,ex,.4+q*.3),ly=lerp(y,ey,.4+q*.3);o+=leaf(lx,ly,side*(60+q*15),8,6,'var(--leaf)',leafD,false)+leaf(lx,ly,side*(130-q*10),7,5,'var(--leaf-2)',leafD,false)}
+        if(s>=3&&i>1&&i<nodes){if(s===4){for(let q=0;q<2;q++)o+=`<circle cx="${f1(bx-side*(6+q*8))}" cy="${f1(y+6+q*4)}" r="5.2" fill="var(--fruit)"/><path d="M${f1(bx-side*(6+q*8)-2)} ${f1(y+1+q*4)} l2 2 2 -2" stroke="var(--leaf)" stroke-width="1.2" fill="none"/>`}else o+=flower5(bx-side*8,y+4,3,'var(--sun)','var(--feed)')}}
+      else o+=leaf(bx,y,-62-(R()*10),L,L*.85,'var(--leaf-2)')+leaf(bx,y,62+(R()*10),L,L*.85,'var(--leaf)')}
+    if(!tom){o+=leaf(bx,by-H,-20,9,8,'var(--leaf-2)',leafD,false)+leaf(bx,by-H,20,9,8,'var(--leaf)',leafD,false);if(s===4)for(let q=0;q<5;q++)o+=`<circle cx="${bx+(q%2?2:-2)}" cy="${f1(by-H-6-q*5)}" r="2.4" fill="var(--pot-5)" stroke="var(--leaf)" stroke-width=".6"/>`}
+    break}
+  case'lavender':case'rosemary':{const rose=k==='rosemary';
+    if(!rose)for(let i=0;i<10;i++){const a=-50+100*i/9+(R()-.5)*8;o+=leaf(bx+(R()-.5)*8,by,a,(14+R()*8)*g+4,3.5,'var(--succ)',leafD,false)}
+    const n=rose?[0,2,3,5,6][s]:[0,3,5,7,9][s];
+    for(let i=0;i<n;i++){const x=bx+(i-(n-1)/2)*(rose?7:5),H=(rose?50:40)*g+R()*40*g,lean=(x-bx)*(rose?1.6:1.3)+(R()-.5)*8,tx=x+lean,ty=by-H;
+      if(rose){o+=`<path d="M${f1(x)} ${by} L${f1(tx)} ${f1(ty)}" stroke="var(--wood)" stroke-width="1.6" stroke-linecap="round"/>`;
+        const cnt=Math.round(H/5);for(let q=1;q<cnt;q++){const px=lerp(x,tx,q/cnt),py=lerp(by,ty,q/cnt),ang=Math.atan2(tx-x,by-ty)*180/Math.PI;
+          o+=`<g transform="translate(${f1(px)} ${f1(py)}) rotate(${f1(ang)})"><path d="M0 0 l-6 -4 M0 0 l6 -4" stroke="var(--succ)" stroke-width="1.7" stroke-linecap="round"/></g>`;
+          if(s===4&&q>cnt*.55&&q%2)o+=`<circle cx="${f1(px+3)}" cy="${f1(py-2)}" r="1.8" fill="var(--water)" opacity=".85"/>`}}
+      else{o+=stem(x,by,tx,ty,(R()-.5)*6,1.3);
+        if(s===4||(s===3&&i%2===0)||(s===2&&p>.7&&i===0))for(let q=0;q<6;q++){const yy=ty+q*3.6,xx=tx-lean*q*3.6/H;o+=`<ellipse cx="${f1(xx-1.6)}" cy="${f1(yy)}" rx="2" ry="2.6" fill="var(--bloom)"/><ellipse cx="${f1(xx+1.6)}" cy="${f1(yy+1.5)}" rx="2" ry="2.6" fill="var(--bloom)" opacity=".85"/>`}}}
+    break}
+  case'cereus':{const H=26+84*t,W=24;
+    const col=(x,y,w,h)=>`<path d="M${f1(x-w/2)} ${f1(y)} L${f1(x-w/2)} ${f1(y-h+w/2)} A${w/2} ${w/2} 0 0 1 ${f1(x+w/2)} ${f1(y-h+w/2)} L${f1(x+w/2)} ${f1(y)}Z" fill="var(--leaf-2)"/><path d="M${f1(x)} ${f1(y)} L${f1(x)} ${f1(y-h+3)} M${f1(x-w/4)} ${f1(y)} L${f1(x-w/4)} ${f1(y-h+w/2+2)} M${f1(x+w/4)} ${f1(y)} L${f1(x+w/4)} ${f1(y-h+w/2+2)}" stroke="var(--leaf)" stroke-width="1.4"/>`;
+    if(s>=3){const ay=by-H*.42;o+=`<path d="M${bx+W/2-2} ${f1(ay)} q16 0 16 -10" stroke="var(--leaf-2)" stroke-width="11" fill="none" stroke-linecap="round"/>`+col(bx+W/2+14,ay-8,13,24*g+8)}
+    if(s===4){const ay=by-H*.6;o+=`<path d="M${bx-W/2+2} ${f1(ay)} q-14 0 -14 -8" stroke="var(--leaf-2)" stroke-width="10" fill="none" stroke-linecap="round"/>`+col(bx-W/2-12,ay-6,12,18*g+6)}
+    o+=col(bx,by,W,H);for(let q=0;q<7;q++){const yy=by-8-q*(H-14)/7;o+=`<circle cx="${bx-W/4}" cy="${f1(yy)}" r=".9" fill="var(--ink)" opacity=".45"/><circle cx="${bx+W/4}" cy="${f1(yy+4)}" r=".9" fill="var(--ink)" opacity=".45"/>`}
+    if(s===4)o+=`<g transform="translate(${bx} ${f1(by-H-2)})">${[0,72,144,216,288].map(a=>`<ellipse rx="3.2" ry="7" cy="-5" fill="var(--flower)" transform="rotate(${a})"/>`).join('')}<circle r="2.5" fill="var(--sun)"/></g>`;break}
+  case'ficus':{const H=24+96*t,n=1+s*2;
+    o+=stem(bx,by,bx+3,by-H,4,3.6,'var(--wood)');
+    for(let i=0;i<n;i++){const y=by-H*(.22+.72*i/n),side=i%2?1:-1,L=(20+R()*6)*g+9;
+      o+=`<g transform="translate(${bx+side} ${f1(y)}) rotate(${f1(side*(52+R()*16))})"><path d="${leafD(L,L*.62)}" fill="var(--leaf-deep)"/><path d="M0 -2 L0 ${f1(-L*.88)}" stroke="var(--leaf-var)" stroke-width="1" opacity=".7"/><path d="M${f1(-L*.12)} ${f1(-L*.3)} q${f1(-L*.06)} ${f1(-L*.25)} 0 ${f1(-L*.45)}" stroke="var(--pot-5)" stroke-width="1.4" opacity=".35" fill="none"/></g>`}
+    o+=leaf(bx+3,by-H,4,12,4.5,'var(--succ-tip)',leafD,false);break}
+  case'pilea':{const H=8+40*t,n=[0,4,6,9,12][s];
+    o+=stem(bx,by,bx,by-H,2,2.8);
+    for(let i=0;i<n;i++){const y0=by-H*(.25+.75*R()),a=(-80+160*(n===1?.5:i/(n-1)))+(R()-.5)*10,len=(18+R()*14)*g+6,rad=a*Math.PI/180,x=bx+Math.sin(rad)*len,y=y0-Math.cos(rad)*len*.8;
+      o+=stem(bx,y0,x,y,0,1.2);o+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1((6+R()*4)*g+3)}" fill="${i%2?'var(--leaf)':'var(--leaf-2)'}"/><circle cx="${f1(x)}" cy="${f1(y)}" r="1.3" fill="var(--leaf-var)"/>`}break}
+  case'calathea':{const n=[0,2,3,5,7][s],spread=night?22:62;
+    for(let i=0;i<n;i++){const a=(n===1?0:-spread+2*spread*i/(n-1))+(R()-.5)*8,P=(18+R()*14)*g,rad=a*Math.PI/180,x=bx+Math.sin(rad)*P,y=by-Math.cos(rad)*P,L=(26+R()*8)*g+7,W=L*.62,la=a*(night?1.1:1.25);
+      o+=stem(bx,by,x,y,0,1.6);
+      o+=`<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(la)})"><path d="${leafD(L,W)}" fill="var(--leaf-2)" stroke="var(--bloom)" stroke-width=".9"/>`;
+      for(let q=1;q<=4;q++){const yy=-L*q/5.2;o+=`<path d="M0 ${f1(yy)} l${f1(W*.32)} ${f1(-L*.07)} M0 ${f1(yy)} l${f1(-W*.32)} ${f1(-L*.07)}" stroke="var(--leaf-deep)" stroke-width="2.4" stroke-linecap="round" opacity=".7"/>`}
+      o+=`<path d="M0 -1 L0 ${f1(-L*.9)}" stroke="var(--leaf-var)" stroke-width="1" opacity=".8"/></g>`}break}
+  case'zz':{const n=[0,2,3,4,5][s];
+    for(let i=0;i<n;i++){const a=(n===1?0:-38+76*i/(n-1))+(R()-.5)*10,L=(42+R()*30)*g,rad=a*Math.PI/180,x=bx+Math.sin(rad)*L,y=by-Math.cos(rad)*L;
+      o+=stem(bx,by,x,y,(R()-.5)*8,2.4,'var(--leaf-deep)');const m=4+s;
+      for(let q=0;q<m;q++){const tt=.35+.65*q/m,px=lerp(bx,x,tt),py=lerp(by,y,tt);o+=leaf(px,py,a-48,(9+R()*2)*Math.max(.8,g)+2,6,'var(--leaf-deep)',leafD,false,` stroke="var(--leaf)" stroke-width=".5"`)+leaf(px,py,a+48,(9+R()*2)*Math.max(.8,g)+2,6,'var(--leaf-deep)',leafD,false,` stroke="var(--leaf)" stroke-width=".5"`)}
+      o+=leaf(x,y,a,8,5,'var(--leaf-deep)',leafD,false)}break}
+  case'strawberry':{const n=[0,3,4,6,7][s];
+    if(s===4){for(const side of[-1,1]){o+=`<path d="M${bx+side*8} ${by-6} Q${bx+side*40} ${by-26} ${bx+side*53} ${by+4}" stroke="var(--stem)" stroke-width="1.2" fill="none"/>`;
+      o+=`<g transform="translate(${bx+side*53} ${by+4})"><path d="M0 -4 C6 -4 6 6 0 12 C-6 6 -6 -4 0 -4Z" fill="var(--fruit)"/><path d="M-3 -4 l3 -3 3 3" stroke="var(--leaf)" stroke-width="1.6" fill="none"/>${[[-2,1],[2,2],[0,6],[-1,4],[2,-1]].map(d=>`<circle cx="${d[0]}" cy="${d[1]}" r=".6" fill="var(--sun)"/>`).join('')}</g>`}}
+    for(let i=0;i<n;i++){const a=(n===1?0:-60+120*i/(n-1))+(R()-.5)*10,P=(20+R()*14)*g,rad=a*Math.PI/180,x=bx+Math.sin(rad)*P,y=by-Math.cos(rad)*P,L=(10+R()*3)*g+5;
+      o+=stem(bx,by,x,y,(R()-.5)*6,1.4);for(const d of[-34,0,34])o+=leaf(x,y,a+d,L,L*.8,i%2?'var(--leaf)':'var(--leaf-2)')}
+    if(s===3)for(let i=0;i<3;i++)o+=flower5(bx-16+i*16,by-30*g-6-(i%2)*6,3.6,'var(--pot-5)','var(--sun)');
+    break}
+  case'sunflower':{const H=24+110*t,n=Math.max(1,Math.round(1+s*1.5));
+    o+=stem(bx,by,bx+4,by-H,(R()-.5)*6,3.6);
+    for(let i=0;i<n;i++){const y=by-H*(.2+.62*i/n),side=i%2?1:-1,L=(18+R()*6)*g+8;o+=leaf(bx+side,y,side*(68+R()*12),L,L*.85,i%2?'var(--leaf)':'var(--leaf-2)',heartD)}
+    const hx=bx+4,hy=by-H;
+    if(s===3)o+=`<ellipse cx="${hx}" cy="${f1(hy)}" rx="8" ry="7" fill="var(--leaf)"/>`+(p>.5?`<ellipse cx="${hx}" cy="${f1(hy-1)}" rx="5" ry="3" fill="var(--sun)"/>`:'');
+    if(s===4){o+=`<g transform="translate(${hx} ${f1(hy)}) rotate(-12)">`;for(let q=0;q<16;q++)o+=`<ellipse rx="3.4" ry="8" cy="-13" fill="var(--sun)" transform="rotate(${q*22.5})"/>`;o+=`<circle r="9.5" fill="var(--wood)"/><circle r="6" fill="var(--soil)"/></g>`}
+    break}
+  }
+  return o;
+}
+function potSVG(k,s,p,seed,potIdx,opts){
+  opts=opts||{};const pot=POTS[potIdx==null?SPECIES[k].pot:potIdx];
+  return `<svg viewBox="0 0 200 230" role="img" aria-label="${SPECIES[k].name} ${STAGES[s]}"><ellipse cx="100" cy="225" rx="42" ry="3.5" fill="var(--shade)"/>`+
+   `<g class="${opts.sway?'sway':''}">${drawPlant(k,s,p,seed,opts.night)}</g>`+
+   `<path d="M62 168 L138 168 L130 221 Q129 224 126 224 L74 224 Q71 224 70 221Z" fill="${pot}"/><path d="M67 173 L71 217" stroke="var(--pot-5)" stroke-width="3" opacity=".3" stroke-linecap="round"/>`+
+   `<rect x="56" y="156" width="88" height="15" rx="4" fill="${pot}"/><rect x="56" y="166" width="88" height="5" fill="var(--shade)"/><ellipse cx="100" cy="159" rx="40" ry="3.5" fill="var(--soil)"/></svg>`;
+}
+
+/* =============== render =============== */
+const $=id=>document.getElementById(id);
+let note='',bookTab='dex',shopFilter='all';
+const active=()=>S.plants.find(p=>p.id===S.active)||S.plants[0];
+const pname=p=>p.nick||SPECIES[p.sp].name;
+const stageName=(sp,s)=>s===4?sp.final:STAGES[s];
+function need(p){const sp=SPECIES[p.sp];if(p.water<sp.band[0])return'물';if(p.water>sp.band[1]+8)return'과습';if(p.feed<=15)return'영양';return''}
+
+function renderScene(){
+  const now=Date.now(),gh=gameHours(now),ph=phase(gh),h=hourOfDay(gh),win=$('win');
+  const sky={dawn:['--dawn-a','--dawn-b'],day:['--day-a','--day-b'],dusk:['--dusk-a','--dusk-b'],night:['--night-a','--night-b']}[ph];
+  $('scene').style.setProperty('--sky-a',`var(${sky[0]})`);$('scene').style.setProperty('--sky-b',`var(${sky[1]})`);
+  $('dimmer').style.opacity=ph==='night'?.28:ph==='dusk'?.08:0;
+  let orb=win.querySelector('.orb');if(!orb){orb=document.createElement('span');win.appendChild(orb)}
+  const day=h>=5.5&&h<19.5,frac=day?(h-5.5)/14:((h-19.5+24)%24)/10.5;
+  orb.className='orb '+(day?'sun':'moon');orb.style.left=(12+76*frac)+'%';orb.style.top=(78-62*Math.sin(Math.PI*frac))+'%';
+  win.querySelectorAll('.star').forEach(e=>e.remove());
+  if(ph==='night')[[20,18],[34,32],[62,14],[78,30],[48,22],[28,48],[70,44]].forEach(([x,y])=>{const s=document.createElement('span');s.className='star';s.style.left=x+'%';s.style.top=y+'%';win.appendChild(s)});
+  const c=$('clock');c.className='time-pill num'+(isDay(gh)?'':' night');c.querySelector('span').innerHTML=clockText(now)+(isDay(gh)?'':' <small>· 쉬는 중</small>');
+}
+function etaHTML(gh,warnTxt,okPrefix){
+  if(gh===0)return `<div class="eta warn"><b>${warnTxt}</b><small>지금</small></div>`;
+  if(gh===null)return `<div class="eta"><b>여유 있음</b><small>40일 이상</small></div>`;
+  return `<div class="eta"><b>${okPrefix} ${fmtGame(gh)}</b><small>현실 ${fmtReal(gh)}</small></div>`;
+}
+function renderGarden(){
+  renderScene();
+  const p=active(),sp=SPECIES[p.sp],st=stageOf(p.xp),night=!isDay(gameHours(Date.now())),fc=forecast(p);
+  if(!$('name-box').querySelector('input')){$('p-name').textContent=pname(p);$('p-latin').textContent=(p.nick?sp.name+' · ':'')+sp.latin}
+  $('plant').innerHTML=potSVG(p.sp,st.s,st.p,p.id,p.pot,{sway:true,night});
+  $('stage-line').innerHTML=[1,2,3,4].map(i=>`<span><i style="width:${st.s>=i?100:st.s===i-1?(st.p*100).toFixed(0):0}%"></i></span>`).join('');
+  $('stage-names').innerHTML=STAGES.map((n,i)=>i===st.s?`<b>${stageName(sp,i)}</b>`:`<span>${stageName(sp,i)}</span>`).join('');
+  const tip=gh=>`현실 ${fmtReal(gh)}`;
+  const vital=(id,dot,label,val,sub,warn,bar,title)=>{$(id).innerHTML=`<span class="k"><i style="background:${dot}"></i>${label}</span><span class="v num">${val}</span><span class="s${warn?' warn':''}">${sub}</span><span class="bar">${bar}</span>`;$(id).title=title||''};
+  // 물
+  let ws,ww=false,wt='';
+  if(p.water>sp.band[1]){ws=`${fmtGame((p.water-sp.band[1])/sp.dry)} 쉬기`;ww=true}
+  else if(fc.water===0){ws='지금 물 주기';ww=true}
+  else if(fc.water===null)ws='여유 있음';
+  else{ws=`${fmtGame(fc.water)} 뒤`;wt=tip(fc.water)}
+  vital('v-water','var(--water)','물',Math.round(p.water)+'%',ws,ww,`<span class="band" style="left:${sp.band[0]}%;width:${sp.band[1]-sp.band[0]}%"></span><span style="left:0;width:${p.water}%;background:var(--water)"></span>`,`알맞은 수분 ${sp.band[0]}~${sp.band[1]}%${wt?' · '+wt:''}`);
+  // 영양
+  let ns,nw=false,nt='';
+  if(p.feed<=15){ns='영양제 필요';nw=true}
+  else{const h=p.feed>=50?fc.feed50:fc.feed15;ns=`${fmtGame(h)} 버팀`;nt=tip(h)}
+  vital('v-feed','var(--feed)','영양',Math.round(p.feed)+'%',ns,nw,`<span style="left:0;width:${p.feed}%;background:var(--feed)"></span>`,`50% 이상이면 1.5배로 자라요${nt?' · '+nt:''}`);
+  // 성장
+  if(st.s>=4)vital('v-grow','var(--grow)','성장','완료',sp.final,false,`<span style="left:0;width:100%;background:var(--grow)"></span>`);
+  else{const blocked=!inBand(sp,p.water)?'물이 맞아야 자라요':p.feed<=15?'영양이 필요해요':'';
+    vital('v-grow','var(--grow)','→ '+stageName(sp,st.s+1),Math.floor(st.p*100)+'%',blocked||`${fmtGame(fc.stage)} 뒤`,!!blocked,`<span style="left:0;width:${st.p*100}%;background:var(--grow)"></span>`,blocked?'':`${stageName(sp,st.s+1)}까지 ${tip(fc.stage)}`)}
+  // buttons
+  $('a-feed').disabled=S.dew<3;
+  const cd=Math.max(0,Math.ceil((p.lastWipe+2*GH-Date.now())/60000));$('wipe-cd').textContent=cd>0?`${cd}분 후`:'무료';$('a-wipe').disabled=cd>0;
+  $('note').innerHTML=note||(night?`밤에는 광합성을 하지 않아요. 물은 낮보다 천천히 말라요.`:`<b>${sp.name}</b> · ${sp.care.join(' · ')}`);
+  // shelf
+  $('shelf').innerHTML=S.plants.map(q=>{const t=stageOf(q.xp),n=need(q);return `<button class="slot${q.id===p.id?' on':''}" data-id="${q.id}">${potSVG(q.sp,t.s,t.p,q.id,q.pot,{night})}<span>${pname(q)}</span><span class="tag${n?' need':''}">${n?(n==='과습'?'과습':n+' 필요'):stageName(SPECIES[q.sp],t.s)}</span></button>`}).join('')
+    +(S.plants.length<10?`<button class="slot add" data-go="shop"><span>+</span><span>들이기</span></button>`:'');
+  $('shelf-count').textContent=`${S.plants.length} / 10`;
+  $('dew').textContent=S.dew;
+}
+function renderShop(){
+  $('filters').innerHTML=Object.entries(GROUPS).map(([k,v])=>`<button data-f="${k}" class="${shopFilter===k?'on':''}">${v}</button>`).join('');
+  const full=S.plants.length>=10;
+  $('shop').innerHTML=SP_KEYS.filter(k=>shopFilter==='all'||SPECIES[k].g===shopFilter).map(k=>{const sp=SPECIES[k],own=S.plants.filter(p=>p.sp===k).length,can=S.dew>=sp.cost&&!full;
+    return `<div class="item">${potSVG(k,3,.6,'shop')}<div style="min-width:0"><h4>${sp.name}</h4><div class="meta"><span class="lv">${sp.lv}</span>${sp.care[0]} · 물 ${sp.band[0]}~${sp.band[1]}%${own?` · ${own}개 키우는 중`:''}</div></div>
+      <button class="price" data-buy="${k}" ${can?'':'disabled'}>${sp.cost===0?'무료':`이슬 ${sp.cost}`}</button></div>`}).join('');
+}
+function renderBook(){
+  const acc=S.answered?Math.round(S.correct/S.answered*100):0,grown=S.plants.filter(p=>stageOf(p.xp).s===4).length,met=new Set(S.plants.map(p=>p.sp)).size;
+  $('stats').innerHTML=`<div class="stat"><b>${S.answered}</b><small>푼 문제</small></div><div class="stat"><b>${acc}%</b><small>정답률</small></div><div class="stat"><b>${S.streak}</b><small>연속 일수</small></div><div class="stat"><b>${met}/${SP_KEYS.length}</b><small>만난 식물</small></div>`;
+  document.querySelectorAll('#tabs2 button').forEach(b=>b.classList.toggle('on',b.dataset.t===bookTab));
+  const chev=`<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg>`;
+  if(bookTab==='dex'){const owned=new Set(S.plants.map(p=>p.sp));
+    $('book').innerHTML=SP_KEYS.map(k=>{const sp=SPECIES[k],o=owned.has(k);return `<details class="entry"><summary>${potSVG(k,o?4:3,1,'book').replace('<svg','<svg class="p'+(o?'':' locked')+'"')}<div style="min-width:0"><h4>${sp.name}</h4><span class="latin" style="font-style:italic;color:var(--muted);font-size:.76rem">${sp.latin}</span></div>${chev}</summary>
+      <div class="body"><div class="cares">${sp.care.map(c=>`<span>${c}</span>`).join('')}<span>물 ${sp.band[0]}~${sp.band[1]}%</span></div><ul>${sp.facts.map(f=>`<li>${f}</li>`).join('')}</ul></div></details>`}).join('')}
+  else if(bookTab==='wrong'){
+    $('book').innerHTML=S.wrong.length?S.wrong.slice().reverse().map(i=>{const q=QUIZ[i];return `<div class="wrongq"><b>${q.q}</b><span class="ans">${q.o[q.a]}</span><p>${q.e}</p></div>`}).join('')+`<button class="ghost" id="retry-wrong" style="margin-top:8px">틀린 문제 다시 풀기 →</button>`:`<p class="empty">틀린 문제가 여기에 모여요. 다시 맞히면 노트에서 빠져요.</p>`}
+  else if(bookTab==='save'){
+    $('book').innerHTML=`<div class="save-box"><p>진행 상황은 이 기기에 자동으로 저장돼요. 창을 닫았다가 다시 와도 그대로 이어져요.${dbDoc?' 지금은 계정에도 함께 저장되고 있어요.':''}</p>
+      <p><b style="color:var(--ink)">다른 기기로 옮기기</b><br>아래 저장 코드를 복사해 두었다가, 새 기기의 같은 칸에 붙여 넣고 불러오면 돼요.</p>
+      <textarea id="save-code" readonly aria-label="저장 코드">${exportCode()}</textarea>
+      <div class="btns"><button class="chip-btn solid" id="copy-code">코드 복사</button></div>
+      <textarea id="load-code" placeholder="여기에 저장 코드를 붙여 넣으세요" aria-label="불러올 저장 코드"></textarea>
+      <div class="btns"><button class="chip-btn" id="load-btn">불러오기</button><button class="chip-btn" id="reset-btn">처음부터 시작</button></div></div>`}
+  else{$('book').innerHTML=S.log.length?`<div class="log">${S.log.slice().reverse().map(l=>`<div><time>${l.g}</time><span>${l.t}</span></div>`).join('')}</div>`:`<p class="empty">식물이 자라거나 새 식물을 들이면 여기에 기록돼요.</p>`}
+}
+function renderAll(){renderGarden();renderShop();renderBook()}
+
+/* =============== actions =============== */
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2600)}
+function fx(cls,n){const w=$('plant');for(let i=0;i<n;i++){const d=document.createElement('span');d.className=cls;d.style.left=(36+Math.random()*28)+'%';d.style.animationDelay=(Math.random()*.4)+'s';w.appendChild(d);setTimeout(()=>d.remove(),1800)}}
+function logIt(t){S.log.push({g:shortStamp(Date.now()),t});if(S.log.length>60)S.log.shift()}
+function stageUp(p,s,silent){const sp=SPECIES[p.sp];logIt(`${pname(p)}이(가) ${stageName(sp,s)} 단계가 됐어요`);if(!silent)setTimeout(()=>toast(`${pname(p)}이(가) ${stageName(sp,s)} 단계로 자랐어요`),400)}
+function gain(p,x){const b=stageOf(p.xp).s;p.xp+=x;const a=stageOf(p.xp).s;if(a>b)stageUp(p,a)}
+const fact=p=>{const f=SPECIES[p.sp].facts;return f[Math.floor(Math.random()*f.length)]};
+
+$('a-water').onclick=()=>{tick();const p=active(),sp=SPECIES[p.sp],b=sp.band;
+  if(p.water>b[1]){p.water=Math.min(100,p.water+8);note=`<b>이미 촉촉해요.</b> ${sp.name}은(는) ${b[0]}~${b[1]}%가 좋아요. 흙이 계속 젖어 있으면 뿌리가 숨을 못 쉬어요.`;fx('drop',4)}
+  else{p.water=Math.min(100,p.water+25);p.lastWater=Date.now();const ok=p.water<=b[1]+5;if(ok)gain(p,4);
+    note=ok?`<b>물을 줬어요.</b> ${fact(p)}`:`<b>조금 많이 줬어요.</b> 받침에 고인 물은 버린다고 생각해 주세요.`;fx('drop',10)}
+  save();renderGarden()};
+$('a-feed').onclick=()=>{tick();const p=active();if(S.dew<3)return;
+  if(p.feed>=75){note='<b>영양분은 충분해요.</b> 비료가 너무 많으면 흙에 염류가 쌓여 뿌리 끝이 타요.';renderGarden();return}
+  S.dew-=3;p.feed=Math.min(100,p.feed+30);gain(p,6);fx('spark',10);note='<b>영양제를 줬어요.</b> 잎은 질소, 꽃과 뿌리는 인, 튼튼함은 칼륨이 맡아요.';save();renderGarden()};
+$('a-wipe').onclick=()=>{tick();const p=active();p.lastWipe=Date.now();gain(p,2);note='<b>잎을 닦아줬어요.</b> 먼지가 빠지면 빛을 더 잘 받고 기공도 숨쉬기 편해져요.';save();renderGarden()};
+$('b-pot').onclick=()=>{const p=active();p.pot=((p.pot??0)+1)%POTS.length;save();renderGarden()};
+$('b-rename').onclick=()=>{const p=active(),box=$('name-box');if(box.querySelector('input'))return;
+  box.innerHTML=`<input id="rename" maxlength="12" value="${(p.nick||'').replace(/"/g,'&quot;')}" placeholder="${SPECIES[p.sp].name}" aria-label="식물 이름"><div class="latin">비워두면 원래 이름으로 돌아가요 · Enter로 저장</div>`;
+  const inp=$('rename');inp.focus();
+  const done=()=>{p.nick=inp.value.trim();box.innerHTML=`<h2 id="p-name"></h2><div class="latin" id="p-latin"></div>`;save();renderGarden()};
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();if(e.key==='Escape'){inp.value=p.nick;inp.blur()}});inp.addEventListener('blur',done,{once:true})};
+
+document.addEventListener('click',e=>{
+  const sl=e.target.closest('.slot[data-id]');if(sl){S.active=sl.dataset.id;note='';save();renderGarden();window.scrollTo({top:0,behavior:'smooth'});return}
+  const go=e.target.closest('[data-go]');if(go){show(go.dataset.go);return}
+  const f=e.target.closest('[data-f]');if(f){shopFilter=f.dataset.f;renderShop();return}
+  const buy=e.target.closest('[data-buy]');if(buy&&!buy.disabled){const k=buy.dataset.buy,sp=SPECIES[k];if(S.dew<sp.cost||S.plants.length>=10)return;
+    S.dew-=sp.cost;const id='p'+Date.now().toString(36),now=Date.now();
+    S.plants.push({id,sp:k,xp:0,water:Math.round((sp.band[0]+sp.band[1])/2),feed:45,lastTick:now,lastWater:now,lastWipe:0,born:now,nick:'',pot:sp.pot});
+    S.active=id;note=`<b>${sp.name} 씨앗을 심었어요.</b> ${sp.facts[0]}`;logIt(`${sp.name} 씨앗을 심었어요`);save();renderAll();show('garden');toast(`${sp.name}을(를) 창가에 놓았어요`);return}
+  const tb=e.target.closest('[data-t]');
+  if(tb&&tb.closest('#tabs2')){bookTab=tb.dataset.t;renderBook();return}
+  if(e.target.closest('#copy-code')){const ta=$('save-code');const txt=ta.value;Promise.resolve().then(()=>navigator.clipboard.writeText(txt)).then(()=>toast('저장 코드를 복사했어요')).catch(()=>{ta.focus();ta.select();toast('코드를 길게 눌러 복사해 주세요')});return}
+  if(e.target.closest('#load-btn')){const r=importCode($('load-code').value);if(r){S=r;S.lastSeen=Date.now();tick();save(true);renderAll();bookTab='dex';show('garden');toast('정원을 불러왔어요')}else toast('코드를 읽지 못했어요. 처음부터 끝까지 빠짐없이 붙여 넣었는지 확인해 주세요');return}
+  const rb=e.target.closest('#reset-btn');if(rb){if(rb.dataset.sure){S=fresh();save(true);renderAll();show('garden');toast('새 정원을 시작했어요')}else{rb.dataset.sure='1';rb.textContent='정말 지울까요? 한 번 더 누르세요'}return}
+  if(e.target.closest('#retry-wrong')){openQuiz('wrong');return}
+  const nv=e.target.closest('nav button');if(nv)show(nv.dataset.v);
+});
+function show(v){['garden','shop','book'].forEach(k=>$('v-'+k).hidden=k!==v);document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));if(v==='shop')renderShop();if(v==='book')renderBook();if(v==='garden')renderGarden();window.scrollTo({top:0})}
+$('again').onclick=()=>openQuiz('more');
+function awayReward(){
+  const now=Date.now(),last=S.lastSeen||0;S.lastSeen=now;
+  if(!last)return null;
+  const min=(now-last)/60000;if(min<5)return null;
+  const dew=Math.min(150,Math.max(2,Math.round(min/3)));   // 3분마다 이슬 1, 최대 150
+  S.dew+=dew;logIt(`${fmtAway(min)} 공부하고 돌아왔어요 · 이슬 ${dew}`);save();
+  return{min,dew};
+}
+function fmtAway(min){if(min<60)return Math.round(min)+'분';const h=Math.floor(min/60),m=Math.round(min%60);return m?`${h}시간 ${m}분`:`${h}시간`}
+const seen=()=>{S.lastSeen=Date.now();save()};
+
+/* =============== quiz (한 번에 한 문제) =============== */
+let Q=null;
+function pickQ(mode){
+  if(mode==='wrong'&&S.wrong.length)return S.wrong[Math.floor(Math.random()*S.wrong.length)];
+  let pool=QUIZ.map((_,i)=>i).filter(i=>!S.seen.includes(i));if(!pool.length){S.seen=[];pool=QUIZ.map((_,i)=>i)}
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+function hello(){const h=new Date().getHours();return h<5?'늦은 밤까지 고생 많아요':h<11?'좋은 아침이에요':h<14?'점심은 챙겨 먹었어요?':h<18?'공부하다 잠깐 쉬러 왔군요':'오늘 하루도 수고했어요'}
+function openQuiz(mode){Q={id:pickQ(mode),mode,picked:null};$('sheet').hidden=false;document.body.style.overflow='hidden';renderQ()}
+function closeQuiz(){$('sheet').hidden=true;document.body.style.overflow='';Q=null;renderGarden()}
+function renderQ(){
+  const q=QUIZ[Q.id],ans=Q.picked!==null,p=active(),st=stageOf(p.xp),ok=ans&&Q.picked===q.a;
+  const away=Q.mode==='open'&&pendingAway?`<div class="welcome"><svg viewBox="0 0 16 16"><path d="M8 1.5C8 1.5 3 7 3 10a5 5 0 0 0 10 0c0-3-5-8.5-5-8.5z" fill="var(--water)"/></svg><div><b>${fmtAway(pendingAway.min)} 동안 공부하고 왔네요</b><span>그동안 맺힌 이슬 ${pendingAway.dew}개를 받았어요</span></div></div>`:'';
+  const head=away+(Q.mode==='open'?`<div class="q-head">${potSVG(p.sp,st.s,st.p,p.id,p.pot,{sway:true})}<div><h2>${hello()}</h2><p>${pname(p)}에게 가기 전에 한 문제만 풀어요. 맞히면 이슬 5, 틀려도 1.</p></div></div>`:'');
+  $('q-in').innerHTML=`${head}<div><div class="q-label">${Q.mode==='wrong'?'오답 다시 풀기':'오늘의 식물 문제'}</div><p class="q-text">${q.q}</p></div>
+   <div class="opts">${q.o.map((t,k)=>`<button class="opt ${ans?(k===q.a?'right':k===Q.picked?'wrong':'dim'):''}" data-k="${k}" ${ans?'disabled':''}><span class="k">${'ABCD'[k]}</span><span>${t}</span></button>`).join('')}</div>
+   ${ans?`<div class="explain"><b>${ok?'정답이에요':'정답은 '+'ABCD'[q.a]+'. '+q.o[q.a]}</b>${q.e}<div class="gain" style="margin-top:6px">이슬 +${ok?5:1}${ok?'':' · 오답 노트에 담았어요'}</div></div>`:''}
+   <div class="q-foot">${ans?`<button class="link" id="q-more">한 문제 더</button><button class="cta" id="q-go">정원으로</button>`:`<button class="link" id="q-skip">${Q.mode==='open'?'오늘은 건너뛰기':'닫기'}</button><span></span>`}</div>`;
+  $('q-in').querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.k));
+  if(ans){$('q-go').onclick=closeQuiz;$('q-go').focus();$('q-more').onclick=()=>{Q={id:pickQ(Q.mode==='wrong'?'wrong':'more'),mode:Q.mode==='wrong'&&S.wrong.length?'wrong':'more',picked:null};renderQ();$('sheet').scrollTop=0}}
+  else $('q-skip').onclick=closeQuiz;
+}
+function answer(k){
+  if(Q.picked!==null)return;const q=QUIZ[Q.id];Q.picked=k;const ok=k===q.a;
+  S.answered++;if(ok)S.correct++;S.dew+=ok?5:1;
+  if(!S.seen.includes(Q.id))S.seen.push(Q.id);
+  if(ok)S.wrong=S.wrong.filter(i=>i!==Q.id);else if(!S.wrong.includes(Q.id))S.wrong.push(Q.id);
+  const t=dayKey(new Date());if(S.lastQuizDay!==t){const yk=dayKey(new Date(Date.now()-864e5));S.streak=S.lastQuizDay===yk?S.streak+1:1;S.lastQuizDay=t}
+  save();renderQ();$('dew').textContent=S.dew;
+}
+
+/* =============== boot =============== */
+try{if('serviceWorker' in navigator&&document.querySelector('link[rel=manifest]'))navigator.serviceWorker.register('/sw.js').catch(()=>{})}catch(e){}
+tick();pendingAway=awayReward();renderAll();openQuiz('open');save();
+setInterval(()=>{if(document.hidden)return;renderScene()},5000);
+setInterval(()=>{if(document.hidden)return;tick();seen();if(!$('v-garden').hidden&&$('sheet').hidden)renderGarden()},30000);
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){seen();save(true);return}
+  tick();const r=awayReward();renderGarden();if(r)toast(`${fmtAway(r.min)} 동안 공부하고 왔네요 · 이슬 +${r.dew}`);
+});
+window.addEventListener('pagehide',()=>{S.lastSeen=Date.now();save(true)});
+})();
+</script>
+
+</body>
+</html>
