@@ -6,11 +6,13 @@ const URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const YEAR = 60 * 60 * 24 * 365;
 
-async function redis(...cmd) {
+// 다른 프로젝트와 같은 저장소를 쓰므로 모든 키 앞에 paroot: 을 붙여요
+const PREFIX = 'paroot:';
+async function redis(op, key, ...rest) {
   const r = await fetch(URL, {
     method: 'POST',
     headers: { Authorization: `Bearer ${TOKEN}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(cmd),
+    body: JSON.stringify([op, PREFIX + key, ...rest]),
   });
   const j = await r.json();
   if (j.error) throw new Error(j.error);
