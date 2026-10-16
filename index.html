@@ -27,7 +27,7 @@
   --water:#4C86A3; --feed:#A9853A; --grow:#3D7653; --accent:#2E6845; --on-accent:#F3F7F1; --warn:#B2643C;
   --pot-1:#B7C8B1; --pot-2:#D8D2C6; --pot-3:#58796A; --pot-4:#C79A80; --pot-5:#EEF0EA; --shade:rgba(30,45,35,.09);
   --dawn-a:#F3D9C9; --dawn-b:#F7EBD6; --day-a:#BFDCE8; --day-b:#EAF4EC; --dusk-a:#E9B99A; --dusk-b:#C9A7B8; --night-a:#1E2A40; --night-b:#34405A;
-  --dim:#0F1A14;
+  --dim:#0F1A14; --hill:#9DBB94; --bloom-bud:#5E4F8C; --fruit-mid:#E0974A; --pot-6:#8FA6BF; --pot-7:#E3B9B2; --pot-8:#3E4543; --pot-9:#E8D9A8;
   --f-display:"Gowun Batang","Nanum Myeongjo",Georgia,serif;
   --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
 }
@@ -38,7 +38,7 @@
   --water:#7DB3CE; --feed:#D2AE62; --grow:#7DBE93; --accent:#7DBE93; --on-accent:#0F1A13; --warn:#E39C74;
   --pot-1:#56695C; --pot-2:#6B665D; --pot-3:#2F4B3C; --pot-4:#8A6656; --pot-5:#A8ADA4; --shade:rgba(0,0,0,.3);
   --dawn-a:#5A4A4A; --dawn-b:#3E3C3A; --day-a:#3C5866; --day-b:#2A3B35; --dusk-a:#5E4436; --dusk-b:#3F3546; --night-a:#0C1220; --night-b:#18213A;
-  --dim:#000; color-scheme:dark}}
+  --dim:#000; --hill:#2E4636; --bloom-bud:#6C5C9E; --fruit-mid:#D98A40; --pot-6:#4D6075; --pot-7:#8A5F5A; --pot-8:#262B29; --pot-9:#8C7C4E; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121A16; --wall:#18221C; --paper:#1D2822; --ink:#E0E9DE; --muted:#97AA9C; --line:#2A3830; --frame:#33443A;
   --leaf:#6DAB7F; --leaf-2:#4F8A62; --leaf-deep:#3E7454; --leaf-var:#A8BB6B; --stem:#5E9470; --wood:#A08064;
@@ -46,7 +46,7 @@
   --water:#7DB3CE; --feed:#D2AE62; --grow:#7DBE93; --accent:#7DBE93; --on-accent:#0F1A13; --warn:#E39C74;
   --pot-1:#56695C; --pot-2:#6B665D; --pot-3:#2F4B3C; --pot-4:#8A6656; --pot-5:#A8ADA4; --shade:rgba(0,0,0,.3);
   --dawn-a:#5A4A4A; --dawn-b:#3E3C3A; --day-a:#3C5866; --day-b:#2A3B35; --dusk-a:#5E4436; --dusk-b:#3F3546; --night-a:#0C1220; --night-b:#18213A;
-  --dim:#000; color-scheme:dark}
+  --dim:#000; --hill:#2E4636; --bloom-bud:#6C5C9E; --fruit-mid:#D98A40; --pot-6:#4D6075; --pot-7:#8A5F5A; --pot-8:#262B29; --pot-9:#8C7C4E; color-scheme:dark}
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -66,16 +66,20 @@ button{cursor:pointer}
 .time-pill i{width:8px;height:8px;border-radius:50%;background:var(--sun);display:inline-block}
 .time-pill.night i{background:#EDEAD8;box-shadow:inset -2px -1px 0 rgba(0,0,0,.25)}
 .time-pill small{color:var(--muted);font-size:.72rem}
+.time-pill b{font-weight:600}
+.time-rate{position:absolute;left:16px;top:46px;z-index:3;font-size:.68rem;color:var(--muted);background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(6px);border-radius:99px;padding:2px 10px}
 .dew{display:flex;align-items:center;gap:6px;font-size:.9rem;font-weight:600}
 .dew svg{width:15px;height:15px}
 .dew small{font-weight:400;color:var(--muted);font-size:.74rem}
 
 /* scene */
-.scene{position:relative;height:300px;border-radius:28px;overflow:hidden;background:var(--wall)}
-.window{position:absolute;left:50%;top:22px;width:196px;height:206px;transform:translateX(-50%);border-radius:98px 98px 6px 6px;
+.scene{position:relative;height:330px;border-radius:28px;overflow:hidden;background:var(--wall)}
+.window{position:absolute;left:50%;top:20px;width:min(86%,360px);height:226px;transform:translateX(-50%);border-radius:44% 44% 6px 6px/30% 30% 6px 6px;
   border:7px solid var(--frame);overflow:hidden;background:linear-gradient(180deg,var(--sky-a,var(--day-a)),var(--sky-b,var(--day-b)));transition:background 2s}
-.window .bar-v{position:absolute;left:50%;top:0;bottom:0;width:5px;margin-left:-2.5px;background:var(--frame)}
-.window .bar-h{position:absolute;top:56%;left:0;right:0;height:5px;background:var(--frame)}
+.window .bar-v{position:absolute;top:0;bottom:0;width:5px;margin-left:-2.5px;background:var(--frame)}
+.window .bar-h{position:absolute;top:58%;left:0;right:0;height:5px;background:var(--frame)}
+.window .hill{position:absolute;left:-10%;right:-10%;bottom:-30px;height:70px;border-radius:50%;background:var(--hill);opacity:.55}
+.window .hill.b{left:30%;right:-30%;bottom:-40px;opacity:.4}
 .orb{position:absolute;width:22px;height:22px;border-radius:50%;margin:-11px 0 0 -11px;transition:left 3s linear,top 3s linear}
 .orb.sun{background:var(--sun);box-shadow:0 0 22px var(--sun)}
 .orb.moon{background:#EDEAD8;box-shadow:inset -6px -2px 0 rgba(0,0,0,.18)}
@@ -85,6 +89,18 @@ button{cursor:pointer}
 .plant{position:absolute;left:50%;bottom:22px;width:220px;height:253px;transform:translateX(-50%);--hole:var(--sky-b,var(--day-b))}
 .plant svg{width:100%;height:100%;display:block}
 .sway{transform-origin:100px 160px;animation:sway 8s ease-in-out infinite}
+.sway.hangs{transform-origin:100px 0;animation-duration:10s}
+.plant.hang{bottom:auto;top:-4px}
+.ff-btn{position:absolute;right:14px;top:14px;z-index:3;display:flex;align-items:center;gap:5px;font-size:.76rem;color:var(--ink);background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(6px);border:0;border-radius:99px;padding:5px 11px}
+.ff-btn svg{width:13px;height:13px}
+.ff-list{display:flex;flex-direction:column;gap:8px}
+.ff-opt{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:var(--paper);font-size:.9rem;text-align:left}
+.ff-opt small{display:block;color:var(--muted);font-size:.74rem}
+.ff-opt b{color:var(--water);white-space:nowrap}
+.ff-opt[disabled]{opacity:.5}
+.scene.ffwd .window{animation:skyspin 1.4s ease-in-out}
+@keyframes skyspin{0%,100%{filter:none}25%{filter:brightness(.55) saturate(.7)}50%{filter:brightness(1.15)}75%{filter:brightness(.6)}}
+.danger{color:var(--warn)!important;border-color:color-mix(in srgb,var(--warn) 45%,var(--line))!important}
 @keyframes sway{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}
 .drop{position:absolute;width:6px;height:9px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:var(--water);top:30px;animation:fall .9s ease-in forwards}
 @keyframes fall{to{transform:translateY(150px);opacity:0}}
@@ -120,7 +136,8 @@ button{cursor:pointer}
 .note b{color:var(--ink);font-weight:600}
 
 /* dock */
-.dock{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.dock{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px}
+.act.extra{background:color-mix(in srgb,var(--sun) 22%,var(--paper));border-color:color-mix(in srgb,var(--sun) 50%,var(--line))}
 .act{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 6px 10px;text-align:center;white-space:nowrap;border-radius:16px;border:1px solid var(--line);background:var(--paper);font-size:.88rem;font-weight:500;transition:transform .12s}
 .act:active{transform:scale(.97)}
 .act svg{width:20px;height:20px;flex:none}
@@ -185,6 +202,32 @@ details.entry .body ul{margin:0;padding-left:1.1em;display:flex;flex-direction:c
 .log{display:flex;flex-direction:column}
 .log div{display:grid;grid-template-columns:86px minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.84rem}
 .log time{color:var(--muted);font-size:.74rem}
+/* pot sheet */
+.pot-sheet{position:fixed;inset:0;z-index:15;background:color-mix(in srgb,var(--ink) 30%,transparent);display:flex;align-items:flex-end;justify-content:center}
+.pot-sheet .panel{width:100%;max-width:480px;max-height:86vh;overflow-y:auto;background:var(--bg);border-radius:22px 22px 0 0;
+  padding:18px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+.pot-sheet .preview{display:flex;justify-content:center;--hole:var(--bg)}
+.pot-sheet .preview svg{width:150px;height:172px}
+.pot-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.pot-opt{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;text-align:center;line-height:1.25;border-radius:14px;border:1px solid var(--line);background:var(--paper);font-size:.74rem;--hole:var(--paper)}
+.pot-opt svg{width:100%;max-width:56px;height:46px}
+.pot-opt small{color:var(--muted);font-size:.68rem}
+.pot-opt.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.pot-opt.locked small{color:var(--water);font-weight:600}
+.swatches{display:flex;flex-wrap:wrap;gap:8px}
+.sw{width:34px;height:34px;border-radius:50%;border:2px solid var(--line)}
+.sw.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--bg) inset}
+/* account */
+.acct{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:16px;background:var(--paper);font-size:.86rem}
+.acct p{margin:0;color:var(--muted)}
+.acct b.t{color:var(--ink);font-size:.95rem}
+.acct input{font:inherit;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg);color:var(--ink);width:100%}
+.acct .row2{display:flex;gap:8px;flex-wrap:wrap}
+.acct .err{color:var(--warn);font-size:.8rem;min-height:1em}
+.acct .ok{color:var(--accent);font-weight:600}
+.banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 10px;padding:11px 14px;border-radius:14px;background:var(--paper);font-size:.82rem}
+.banner button{flex:none}
+.banner>span:first-child{flex:1 1 180px;min-width:0}
 .save-box{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:16px;background:var(--paper);font-size:.84rem}
 .save-box p{margin:0;color:var(--muted)}
 .save-box textarea{width:100%;min-height:76px;font:inherit;font-size:.74rem;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg);color:var(--ink);resize:vertical;word-break:break-all}
@@ -246,11 +289,13 @@ nav button.on{color:var(--ink);font-weight:600}
   <!-- 정원 -->
   <section id="v-garden" class="wrap">
     <div class="scene" id="scene">
-      <div class="window" id="win"><span class="bar-v"></span><span class="bar-h"></span></div>
+      <div class="window" id="win"><span class="hill"></span><span class="hill b"></span><span class="bar-v" style="left:33.3%"></span><span class="bar-v" style="left:66.6%"></span><span class="bar-h"></span></div>
       <div class="sill"></div>
       <div class="plant" id="plant"></div>
       <div class="dimmer" id="dimmer"></div>
       <div class="time-pill num" id="clock"><i></i><span></span></div>
+      <div class="time-rate">현실 1분 = 이곳 12분 · 현실 2시간이 하루</div>
+      <button class="ff-btn" id="b-ff" aria-label="빨리 감기"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3.5v9l6-4.5zM8 3.5v9l6-4.5z"/></svg>빨리 감기</button>
     </div>
 
     <div>
@@ -258,7 +303,8 @@ nav button.on{color:var(--ink);font-weight:600}
         <div style="min-width:0;flex:1" id="name-box"><h2 id="p-name">몬스테라</h2><div class="latin" id="p-latin"></div></div>
         <div class="mini-btns">
           <button class="icon-btn" id="b-rename" aria-label="이름 바꾸기" title="이름 바꾸기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10.5 2.5l3 3L6 13H3v-3z"/></svg></button>
-          <button class="icon-btn" id="b-pot" aria-label="화분 색 바꾸기" title="화분 색 바꾸기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3 6h10l-1.5 8h-7z"/><path d="M2 4h12v2H2z"/></svg></button>
+          <button class="icon-btn" id="b-pot" aria-label="화분 꾸미기" title="화분 꾸미기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3 6h10l-1.5 8h-7z"/><path d="M2 4h12v2H2z"/></svg></button>
+          <button class="icon-btn" id="b-drop" aria-label="식물 버리기" title="식물 버리기"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.7 8.5h5.6l.7-8.5"/></svg></button>
         </div>
       </div>
       <div class="stage-line" id="stage-line"></div>
@@ -275,8 +321,11 @@ nav button.on{color:var(--ink);font-weight:600}
       <button class="act main" id="a-water"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h11v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/><path d="M15 11.5l5.5-4"/><path d="M6.5 10c0-2.2 1.5-4 3-4s3 1.8 3 4"/></svg><span>물 주기<small>무료</small></span></button>
       <button class="act" id="a-feed"><svg viewBox="0 0 24 24" fill="none" stroke="var(--feed)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v3l2 3v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9l2-3z"/><path d="M7 13h10"/></svg><span>영양제<small>이슬 3</small></span></button>
       <button class="act" id="a-wipe"><svg viewBox="0 0 24 24" fill="none" stroke="var(--leaf)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 13 6 12 4 5c6 0 9 4 9 9"/><path d="M13 14c0-5 3-8 7-8-1 5-4 8-7 8"/></svg><span>잎 닦기<small id="wipe-cd">무료</small></span></button>
+      <button class="act extra" id="a-extra" hidden></button>
     </div>
     <p class="note" id="note"></p>
+
+    <div class="banner" id="acct-banner" hidden><span>계정을 만들면 폰과 컴퓨터에서 같은 정원을 키울 수 있어요</span><span style="display:flex;gap:6px"><button class="chip-btn solid" id="acct-go">계정 만들기</button><button class="chip-btn" id="acct-later" aria-label="나중에">나중에</button></span></div>
 
     <div class="sec">
       <div class="sec-h"><h3>창가 선반</h3><small class="num" id="shelf-count"></small></div>
@@ -296,7 +345,7 @@ nav button.on{color:var(--ink);font-weight:600}
   <!-- 도감 -->
   <section id="v-book" class="wrap" hidden>
     <div class="stats num" id="stats"></div>
-    <div class="tabs2" id="tabs2"><button data-t="dex" class="on">식물 도감</button><button data-t="wrong">오답 노트</button><button data-t="log">성장 일기</button><button data-t="save">저장</button></div>
+    <div class="tabs2" id="tabs2"><button data-t="dex" class="on">식물 도감</button><button data-t="wrong">오답 노트</button><button data-t="log">성장 일기</button><button data-t="save">계정·저장</button></div>
     <div id="book"></div>
   </section>
 </div>
@@ -308,6 +357,7 @@ nav button.on{color:var(--ink);font-weight:600}
 </div></nav>
 
 <div class="sheet" id="sheet" hidden><div class="in" id="q-in"></div></div>
+<div class="pot-sheet" id="pot-sheet" hidden><div class="panel" id="pot-panel"></div></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -318,8 +368,22 @@ const GH=3600e3/SPEED;               // 게임 1시간 = 현실 ms
 const STAGES=['씨앗','새싹','어린 식물','자란 식물','성숙'];
 const XP=[0,20,60,130,240];
 const DAY=[6,20];                    // 낮(광합성) 시간
-const POTS=['var(--pot-1)','var(--pot-2)','var(--pot-3)','var(--pot-4)','var(--pot-5)'];
-const GROUPS={all:'전체',foliage:'관엽',succulent:'다육·선인장',herb:'허브',flower:'꽃',fruit:'열매'};
+const POTS=['var(--pot-1)','var(--pot-2)','var(--pot-3)','var(--pot-4)','var(--pot-5)','var(--pot-6)','var(--pot-7)','var(--pot-8)','var(--pot-9)'];
+const POT_NAMES=['세이지','스톤','숲','테라코타','백자','하늘','장밋빛','차콜','버터'];
+const POT_STYLES={
+ basic:{name:'기본 화분',cost:0},
+ cylinder:{name:'원통 화분',cost:12},
+ terra:{name:'토분',cost:15},
+ bowl:{name:'낮은 볼',cost:18},
+ round:{name:'둥근 항아리',cost:25},
+ stripe:{name:'줄무늬 도자기',cost:30},
+ dots:{name:'물방울 도자기',cost:30},
+ basket:{name:'라탄 바구니',cost:40},
+ drip:{name:'흘림 유약',cost:45},
+ face:{name:'웃는 화분',cost:50}
+};
+const WEB=!!document.querySelector('link[rel=manifest]');
+const GROUPS={all:'전체',hang:'걸이',foliage:'관엽',succulent:'다육·선인장',herb:'허브',flower:'꽃',fruit:'열매'};
 
 const SPECIES={
  monstera:{name:'몬스테라',latin:'Monstera deliciosa',g:'foliage',cost:0,band:[40,80],dry:.75,gr:1,pot:0,final:'성숙',lv:'쉬움',
@@ -353,7 +417,13 @@ const SPECIES={
  tomato:{name:'방울토마토',latin:'Solanum lycopersicum',g:'fruit',cost:45,band:[55,90],dry:1.8,gr:1.3,pot:3,final:'열매',lv:'보통',
   care:['하루 8시간 햇빛','물 자주','지주대'],facts:['꽃 하나에 암술과 수술이 같이 있어 스스로 꽃가루받이해요. 살짝 흔들어주면 열매가 잘 맺혀요.','잎겨드랑이에서 나오는 곁순을 따주면 열매에 양분이 몰려요.','물을 들쭉날쭉 주면 열매가 갈라져요.']},
  strawberry:{name:'딸기',latin:'Fragaria × ananassa',g:'fruit',cost:45,band:[50,85],dry:1.3,gr:1.15,pot:4,final:'열매',lv:'보통',
-  care:['햇빛 많이','흙 촉촉하게','러너 정리'],facts:['겉의 깨알 같은 것이 진짜 열매(수과)이고, 빨간 부분은 부푼 꽃받기예요.','기는줄기(러너)를 뻗어 새 포기를 만드는 무성생식을 해요.','러너를 잘라주면 원래 포기의 열매가 커져요.']}
+  care:['햇빛 많이','흙 촉촉하게','러너 정리'],facts:['겉의 깨알 같은 것이 진짜 열매(수과)이고, 빨간 부분은 부푼 꽃받기예요.','기는줄기(러너)를 뻗어 새 포기를 만드는 무성생식을 해요.','러너를 잘라주면 원래 포기의 열매가 커져요.']},
+ pearls:{name:'녹영',latin:'Curio rowleyanus',g:'hang',hang:true,cost:35,band:[15,45],dry:.3,gr:.9,pot:1,final:'꽃 핌',lv:'보통',
+  care:['밝은 간접광','구슬이 쭈글하면','통풍 좋게'],facts:['동글동글한 구슬은 물을 저장한 잎이에요. 표면적을 줄여 증발을 막는 구조예요.','구슬마다 있는 투명한 줄무늬(창)로 빛이 잎 안까지 들어가요.','줄기를 흙 위에 눕혀두면 마디에서 뿌리가 나와 쉽게 번식해요.']},
+ rhipsalis:{name:'립살리스',latin:'Rhipsalis baccifera',g:'hang',hang:true,cost:40,band:[30,65],dry:.55,gr:.95,pot:2,final:'열매',lv:'쉬움',
+  care:['반그늘','겉흙 마르면','습도 좋아함'],facts:['나무 위에 붙어 사는 착생 선인장이라 가시가 거의 없어요.','아메리카 대륙 밖(아프리카, 스리랑카)에도 자생하는 유일한 선인장 무리예요.','작고 하얀 꽃이 진 뒤 겨우살이처럼 하얀 열매가 맺혀요.']},
+ tillandsia:{name:'수염 틸란드시아',latin:'Tillandsia usneoides',g:'hang',hang:true,airplant:true,cost:45,band:[30,70],dry:1,gr:1,pot:0,final:'꽃 핌',lv:'보통',
+  care:['밝은 간접광','분무·물에 담그기','흙 필요 없음'],facts:['뿌리 대신 잎의 은빛 비늘(트리콤)로 공기 중 물과 양분을 흡수해요.','흙 없이 걸어두고 키우는 공중식물(에어플랜트)이에요.','이름과 달리 이끼가 아니라 파인애플과 같은 브로멜리아드 과예요.']}
 };
 const SP_KEYS=Object.keys(SPECIES);
 
@@ -397,6 +467,9 @@ const QUIZ=[
  {q:'금전수가 물을 자주 안 줘도 버티는 이유는?',o:['잎이 바늘 모양이라서','땅속 덩이줄기에 물을 저장해서','공기 중 수분만 흡수해서','광합성을 안 해서'],a:1,e:'굵은 근경이 물탱크 역할을 해요. 그래서 과습에 약해요.'},
  {q:'고무나무 줄기에 상처가 나면 나오는 하얀 액체는?',o:['수액(물)','라텍스(유액)','꿀','송진'],a:1,e:'초식동물과 병원균을 막는 방어 물질이에요.'},
  {q:'호야 꽃이 진 뒤 꽃대(화경)를 남겨두는 이유는?',o:['씨앗이 생겨서','같은 꽃대에서 다시 꽃이 피어서','물을 저장해서','뿌리가 돼서'],a:1,e:'호야는 같은 꽃대에서 해마다 꽃을 피워요.'},
+ {q:'수염 틸란드시아가 흙 없이도 물을 흡수하는 구조는?',o:['뿌리털','잎 표면의 트리콤(비늘털)','기공만으로','줄기의 물관'],a:1,e:'트리콤이 물을 붙잡아 잎 안으로 들여보내요. 그래서 분무나 물에 담그기로 물을 줘요.'},
+ {q:'녹영(구슬 다육)의 동그란 잎이 건조에 강한 이유는?',o:['부피에 비해 표면적이 작아 증발이 적어서','잎에 가시가 있어서','광합성을 안 해서','뿌리가 깊어서'],a:0,e:'구에 가까울수록 같은 부피에서 겉넓이가 가장 작아 물을 덜 잃어요.'},
+ {q:'다른 식물 위에 붙어 살지만 양분을 빼앗지 않는 식물을 뭐라고 할까?',o:['기생식물','착생식물','부생식물','수생식물'],a:1,e:'립살리스, 틸란드시아, 많은 난초가 착생식물이에요. 나무는 자리만 빌려줘요.'},
  {q:'낮 길이(밤 길이)에 반응해 꽃을 피우는 성질은?',o:['광주기성','굴광성','춘화처리','휴면'],a:0,e:'피토크롬이 빛을 감지해요. 사실은 연속된 밤의 길이가 기준이에요.'}
 ];
 
@@ -404,13 +477,14 @@ const QUIZ=[
 const LS='small-greenhouse-v1';
 let pendingAway=null;
 const dayKey=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
-function fresh(){const now=Date.now();return{v:2,savedAt:now,start:now,dew:10,streak:0,lastQuizDay:null,answered:0,correct:0,seen:[],wrong:[],log:[],lastSeen:now,active:'p1',
-  plants:[{id:'p1',sp:'monstera',xp:24,water:55,feed:45,lastTick:now,lastWater:now,lastWipe:0,born:now,nick:'',pot:0}]}}
+function fresh(){const now=Date.now();return{v:2,savedAt:now,start:now,dew:10,streak:0,lastQuizDay:null,answered:0,correct:0,seen:[],wrong:[],log:[],lastSeen:now,ownedPots:['basic'],active:'p1',
+  plants:[{id:'p1',sp:'monstera',xp:24,water:55,feed:45,lastTick:now,lastWater:now,lastWipe:0,born:now,nick:'',pot:0,potStyle:'basic'}]}}
 function migrate(s){
   if(!s||!s.plants||!s.plants.length)return fresh();
   s.v=2; s.start=s.start||Math.min(...s.plants.map(p=>p.born||Date.now()));
   s.answered=s.answered??((s.quizzes||0)*3); s.correct=s.correct||0; s.seen=s.seen||[]; s.wrong=s.wrong||[]; s.log=s.log||[]; delete s.timer;
-  s.plants.forEach(p=>{if(p.nick==null)p.nick='';if(p.pot==null)p.pot=SPECIES[p.sp]?SPECIES[p.sp].pot:0;});
+  s.plants.forEach(p=>{if(p.nick==null)p.nick='';if(p.pot==null)p.pot=SPECIES[p.sp]?SPECIES[p.sp].pot:0;if(!p.potStyle)p.potStyle='basic';if(p.health==null)p.health=100;});
+  s.ownedPots=s.ownedPots||['basic'];
   s.plants=s.plants.filter(p=>SPECIES[p.sp]); if(!s.plants.length)return fresh();
   return s;
 }
@@ -419,7 +493,31 @@ S=migrate(S);
 
 let dbDoc=null,saveT=null;
 function save(now){S.savedAt=Date.now();try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}
-  clearTimeout(saveT);const push=()=>{if(dbDoc)dbDoc.set(JSON.parse(JSON.stringify(S))).catch(()=>{})};if(now)push();else saveT=setTimeout(push,900)}
+  clearTimeout(saveT);const push=()=>{if(dbDoc)dbDoc.set(JSON.parse(JSON.stringify(S))).catch(()=>{});cloudPush(now)};if(now)push();else saveT=setTimeout(push,900)}
+/* ---- 계정 동기화 (웹 버전) ---- */
+const AUTH_KEY='paroot-auth';
+let AUTH=null;try{AUTH=JSON.parse(localStorage.getItem(AUTH_KEY)||'null')}catch(e){}
+let cloudT=null,cloudState='';
+async function api(body){
+  const r=await fetch('/api/sync',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+  let j={};try{j=await r.json()}catch(e){}
+  if(!r.ok){const e=new Error(j.error||'서버에 연결하지 못했어요. 잠시 뒤에 다시 해주세요');e.code=r.status;throw e}
+  return j;
+}
+function setAuth(a){AUTH=a;try{a?localStorage.setItem(AUTH_KEY,JSON.stringify(a)):localStorage.removeItem(AUTH_KEY)}catch(e){}}
+function cloudPush(now){
+  if(!WEB||!AUTH)return;clearTimeout(cloudT);
+  const go=()=>{if(now&&navigator.sendBeacon){try{if(navigator.sendBeacon('/api/sync',new Blob([JSON.stringify({action:'push',token:AUTH.token,data:S})],{type:'application/json'})))return}catch(e){}}
+    api({action:'push',token:AUTH.token,data:S}).then(()=>{cloudState='saved';S.cloudAt=Date.now()}).catch(e=>{cloudState='error';if(e.code===401){setAuth(null);toast('다시 로그인해 주세요')}})};
+  if(now)go();else cloudT=setTimeout(go,3000);
+}
+async function cloudPull(){
+  if(!WEB||!AUTH)return;
+  try{const r=await api({action:'pull',token:AUTH.token});
+    if(r.data&&r.data.plants&&(r.data.savedAt||0)>(S.savedAt||0)){S=migrate(r.data);tick();try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}renderAll();toast('다른 기기에서 키운 정원을 불러왔어요')}
+    cloudState='saved';
+  }catch(e){if(e.code===401)setAuth(null)}
+}
 function exportCode(){try{return 'GH2.'+btoa(unescape(encodeURIComponent(JSON.stringify(S))))}catch(e){return''}}
 function importCode(code){try{code=(code||'').trim().replace(/\s+/g,'');if(!code.startsWith('GH2.'))return null;const o=JSON.parse(decodeURIComponent(escape(atob(code.slice(4)))));return o&&o.plants&&o.plants.length?migrate(o):null}catch(e){return null}}
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist().catch(()=>{})}catch(e){}
@@ -451,7 +549,22 @@ function stepPlant(p,sp,h,gh){
   const day=isDay(gh);
   p.water=Math.max(0,p.water-sp.dry*h*(day?1:.5));   // 밤엔 기공이 닫혀 증산이 줄어요
   p.feed=Math.max(0,p.feed-.4*h);
-  if(day&&inBand(sp,p.water)&&p.feed>15)p.xp+=h*sp.gr*(p.feed>=50?1.5:1);
+  // 건강: 오래 마르거나 오래 젖어 있으면 시들고, 알맞으면 회복해요
+  let hp=p.health??100;
+  if(p.water<sp.band[0]-5)hp-=h*(p.water<=0?3:1.5);
+  else if(p.water>sp.band[1]+10)hp-=h*1;
+  else if(inBand(sp,p.water))hp+=h*3;
+  p.health=Math.max(0,Math.min(100,hp));
+  if(day&&inBand(sp,p.water)&&p.feed>15&&p.health>=30)p.xp+=h*sp.gr*(p.feed>=50?1.5:1)*(p.health/100);
+}
+const hpState=hp=>hp<=0?'dead':hp<40?'critical':hp<70?'wilt':'ok';
+const HP_LABEL={dead:'말라버림',critical:'위독',wilt:'시듦',ok:'건강'};
+function hpWrap(inner,hp,hang){
+  const st=hpState(hp??100);if(st==='ok')return inner;
+  const f={wilt:'saturate(.7) sepia(.18)',critical:'saturate(.45) sepia(.45) hue-rotate(-12deg)',dead:'saturate(.15) sepia(.75) brightness(.85)'}[st];
+  const k={wilt:.95,critical:.88,dead:.8}[st];
+  const tf=hang?'':`transform="translate(0 ${f1(160*(1-k))}) scale(1 ${k})"`;
+  return `<g style="filter:${f}" ${tf}>${inner}</g>`;
 }
 function tick(){
   const now=Date.now();
@@ -491,7 +604,47 @@ const heartD=(L,W)=>`M0 0 C${f1(W*.95)} ${f1(-L*.05)} ${f1(W*.8)} ${f1(-L*.9)} 0
 function leaf(x,y,a,L,W,fill,shape,rib,extra){return `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(a)})"><path d="${(shape||leafD)(L,W)}" fill="${fill}"${extra||''}/>${rib===false?'':`<path d="M0 -1.5 L0 ${f1(-L*.85)}" stroke="var(--stem)" stroke-width=".9" opacity=".5" fill="none"/>`}</g>`}
 function stem(x0,y0,x1,y1,bend,w,col){return `<path d="M${f1(x0)} ${f1(y0)} Q${f1((x0+x1)/2+bend)} ${f1((y0+y1)/2)} ${f1(x1)} ${f1(y1)}" stroke="${col||'var(--stem)'}" stroke-width="${w||2.4}" fill="none" stroke-linecap="round"/>`}
 const lerp=(a,b,t)=>a+(b-a)*t;
-function flower5(x,y,r,col,center){let o=`<g transform="translate(${f1(x)} ${f1(y)})">`;for(let k=0;k<5;k++)o+=`<ellipse rx="${f1(r*.45)}" ry="${f1(r)}" cy="${f1(-r*.7)}" fill="${col}" transform="rotate(${k*72})"/>`;return o+`<circle r="${f1(r*.4)}" fill="${center||'var(--sun)'}"/></g>`}
+// t: 0 봉오리 → 0.35 벌어짐 → 1 만개
+function flower5(x,y,r,col,center,t,n){t=t==null?1:t;n=n||5;let o=`<g transform="translate(${f1(x)} ${f1(y)})">`;
+  if(t<.35){const k=.55+t;return o+`<path d="M0 ${f1(r*.5)} C${f1(-r*.6*k)} 0 ${f1(-r*.35*k)} ${f1(-r*k)} 0 ${f1(-r*1.1*k)} C${f1(r*.35*k)} ${f1(-r*k)} ${f1(r*.6*k)} 0 0 ${f1(r*.5)}Z" fill="${col}"/><path d="M${f1(-r*.45)} ${f1(r*.3)} L0 ${f1(-r*.25)} L${f1(r*.45)} ${f1(r*.3)}" fill="var(--leaf)"/></g>`}
+  const k=Math.min(1,(t-.35)/.5),spread=.55+.45*k;
+  for(let q=0;q<n;q++)o+=`<ellipse rx="${f1(r*.46*spread)}" ry="${f1(r*(.6+.4*k))}" cy="${f1(-r*.7*spread)}" fill="${col}" transform="rotate(${f1(q*360/n)})"/>`;
+  if(k>.5)for(let q=0;q<n;q++)o+=`<ellipse rx="${f1(r*.2)}" ry="${f1(r*.45)}" cy="${f1(-r*.45)}" fill="var(--pot-5)" opacity=".35" transform="rotate(${f1(q*360/n+360/n/2)})"/>`;
+  o+=`<circle r="${f1(r*.38)}" fill="${center||'var(--sun)'}"/>`;
+  if(k>.6)for(let q=0;q<6;q++){const a=q*Math.PI/3;o+=`<circle cx="${f1(Math.cos(a)*r*.5)}" cy="${f1(Math.sin(a)*r*.5)}" r="${f1(r*.09)}" fill="var(--feed)"/>`}
+  return o+'</g>'}
+const bloomT=(s,p)=>s<3?0:s===3?p*.5:.5+.5*p;
+const ripeCol=p=>p<.35?'var(--leaf-2)':p<.7?'var(--fruit-mid)':'var(--fruit)';
+function sunHead(x,y,t){
+  let o=`<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(-8-10*t)})">`;
+  if(t<.3){const r=5+t*10;return o+`<ellipse rx="${f1(r)}" ry="${f1(r*.85)}" fill="var(--leaf)"/>${[0,1,2,3,4,5,6,7].map(q=>`<path d="M0 ${f1(-r*.6)} L${f1(-r*.25)} ${f1(-r*1.05)} L${f1(r*.25)} ${f1(-r*1.05)}Z" fill="var(--leaf-2)" transform="rotate(${q*45})"/>`).join('')}</g>`}
+  const k=Math.min(1,(t-.3)/.55),pl=3+11*k;
+  for(let q=0;q<21;q++)o+=`<ellipse rx="3.3" ry="${f1(pl*.6)}" cy="${f1(-9-pl*.55)}" fill="var(--sun)" transform="rotate(${f1(q*137.5%360)})"/>`;
+  if(k>.4)for(let q=0;q<21;q++)o+=`<ellipse rx="2.6" ry="${f1(pl*.45)}" cy="${f1(-8-pl*.4)}" fill="var(--feed)" opacity=".55" transform="rotate(${f1(q*137.5%360+8)})"/>`;
+  o+=`<circle r="10" fill="var(--wood)"/>`;
+  for(let q=1;q<70;q++){const rr=1.15*Math.sqrt(q),a=q*2.39996;if(rr>9.4)break;o+=`<circle cx="${f1(Math.cos(a)*rr)}" cy="${f1(Math.sin(a)*rr)}" r=".75" fill="var(--soil)"/>`}
+  return o+'</g>'}
+function drawPot(style,col,uid){
+  const id='c'+uid;let body,rim,extra='';
+  switch(style){
+   case'cylinder':body=`M64 168 L136 168 L136 218 Q136 224 130 224 L70 224 Q64 224 64 218Z`;rim=`<rect x="60" y="156" width="80" height="14" rx="4" fill="${col}"/>`;break;
+   case'bowl':body=`M50 166 L150 166 Q148 206 116 214 L84 214 Q52 206 50 166Z`;rim=`<rect x="46" y="156" width="108" height="12" rx="5" fill="${col}"/>`;extra=`<rect x="84" y="212" width="32" height="10" rx="2" fill="${col}"/><rect x="84" y="212" width="32" height="10" rx="2" fill="var(--shade)"/>`;break;
+   case'round':body=`M70 166 C50 186 56 224 100 224 C144 224 150 186 130 166Z`;rim=`<rect x="66" y="156" width="68" height="13" rx="5" fill="${col}"/>`;break;
+   case'terra':body=`M64 174 L136 174 L129 221 Q128 224 125 224 L75 224 Q72 224 71 221Z`;rim=`<rect x="56" y="155" width="88" height="21" rx="3" fill="${col}"/><rect x="56" y="171" width="88" height="5" fill="var(--shade)"/><rect x="56" y="155" width="88" height="3" fill="var(--pot-5)" opacity=".18"/>`;break;
+   default:body=`M62 168 L138 168 L130 221 Q129 224 126 224 L74 224 Q71 224 70 221Z`;rim=`<rect x="56" y="156" width="88" height="15" rx="4" fill="${col}"/><rect x="56" y="166" width="88" height="5" fill="var(--shade)"/>`;
+  }
+  const isCyl=['dots','face'].includes(style),isRound=style==='drip';
+  if(isCyl){body=`M64 168 L136 168 L136 218 Q136 224 130 224 L70 224 Q64 224 64 218Z`;rim=`<rect x="60" y="156" width="80" height="14" rx="4" fill="${col}"/>`}
+  if(isRound){body=`M70 166 C50 186 56 224 100 224 C144 224 150 186 130 166Z`;rim=`<rect x="66" y="156" width="68" height="13" rx="5" fill="${col}"/>`}
+  let pat='';
+  if(style==='stripe')for(let y=178;y<224;y+=11)pat+=`<rect x="40" y="${y}" width="120" height="4" fill="var(--pot-5)" opacity=".55"/>`;
+  if(style==='dots')for(let y=178,r=0;y<222;y+=10,r++)for(let x=70+(r%2)*6;x<136;x+=12)pat+=`<circle cx="${x}" cy="${y}" r="2.3" fill="var(--pot-5)" opacity=".7"/>`;
+  if(style==='basket'){for(let y=172;y<224;y+=7)pat+=`<path d="M40 ${y} q5 -3 10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0" stroke="var(--wood)" stroke-width="2" fill="none" opacity=".55"/>`;for(let x=66;x<136;x+=9)pat+=`<path d="M${x} 168 L${x+(x-100)*.08} 224" stroke="var(--shade)" stroke-width="1.5"/>`}
+  if(style==='drip')pat=`<path d="M40 166 L160 166 L160 186 Q152 196 146 186 Q140 204 132 188 Q124 198 116 186 Q108 206 98 188 Q90 198 82 186 Q74 200 66 186 Q58 194 52 184 L40 184Z" fill="var(--pot-5)" opacity=".55"/>`;
+  if(style==='face')pat=`<circle cx="88" cy="190" r="2.6" fill="var(--ink)" opacity=".7"/><circle cx="112" cy="190" r="2.6" fill="var(--ink)" opacity=".7"/><path d="M92 200 Q100 207 108 200" stroke="var(--ink)" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".7"/><ellipse cx="80" cy="199" rx="5" ry="3" fill="var(--flower)" opacity=".6"/><ellipse cx="120" cy="199" rx="5" ry="3" fill="var(--flower)" opacity=".6"/>`;
+  return `<defs><clipPath id="${id}"><path d="${body}"/></clipPath></defs><path d="${body}" fill="${col}"/><g clip-path="url(#${id})">${pat}<path d="M58 160 L70 230" stroke="var(--pot-5)" stroke-width="5" opacity=".18"/></g>${extra}${rim}`;
+}
+let potUid=0;
 
 function drawPlant(k,s,p,seed,night){
   const R=rng(seed+k),bx=100,by=160,t=(s+p)/4,g=.35+.65*t;let o='';
@@ -510,14 +663,15 @@ function drawPlant(k,s,p,seed,night){
       const n=Math.max(2,Math.round(len/12));
       for(let j=0;j<=n;j++){const yy=lerp(y1,y2,j/n),xx=lerp(x1,x2,j/n)+side*2;
         o+=hoya?leaf(xx,yy,side*(j%2?115:70)+(R()-.5)*20,11+R()*3,7.5,'var(--leaf-deep)',leafD,false,` stroke="var(--leaf-2)" stroke-width=".6"`):leaf(xx,yy,side*(j%2?120:70)+(R()-.5)*20,10+R()*3,9,j%3===1?'var(--leaf-var)':'var(--leaf)',heartD,false)}
-      if(hoya&&s===4&&i===0){const cx=x1+side*10,cy=lerp(y1,y2,.45);o+=`<path d="M${f1(x1)} ${f1(cy-6)} L${f1(cx)} ${f1(cy)}" stroke="var(--stem)" stroke-width="1"/>`;for(let q=0;q<8;q++){const aa=q/8*Math.PI*2;o+=flower5(cx+Math.cos(aa)*6,cy+Math.sin(aa)*5,2.6,'var(--flower)','var(--fruit)')}}
+      if(hoya&&s>=3&&i===0){const bt=bloomT(s,p),cx=x1+side*12,cy=lerp(y1,y2,.45);o+=`<path d="M${f1(x1)} ${f1(cy-6)} L${f1(cx)} ${f1(cy)}" stroke="var(--stem)" stroke-width="1"/>`;const nf=Math.round(5+bt*8);for(let q=0;q<nf;q++){const aa=q/nf*Math.PI*2,rr=4+bt*4;o+=`<path d="M${f1(cx)} ${f1(cy)} L${f1(cx+Math.cos(aa)*rr)} ${f1(cy+Math.sin(aa)*rr*.8)}" stroke="var(--succ-tip)" stroke-width=".6"/>`+flower5(cx+Math.cos(aa)*rr,cy+Math.sin(aa)*rr*.8,2.2+bt,'var(--flower)','var(--fruit)',Math.min(1,bt*1.3-(q%3)*.08))}}
     }break}
   case'sansevieria':{const n=[0,2,3,5,7][s];
     for(let i=0;i<n;i++){const x=bx+(i-(n-1)/2)*7+(R()-.5)*3,H=(45+R()*45)*g,lean=(x-bx)*.5+(R()-.5)*8,w=5+R()*2;
       o+=`<path d="M${f1(x-w)} ${by} C${f1(x-w)} ${f1(by-H*.5)} ${f1(x+lean-w*.6)} ${f1(by-H*.8)} ${f1(x+lean)} ${f1(by-H)} C${f1(x+lean+w*.6)} ${f1(by-H*.8)} ${f1(x+w)} ${f1(by-H*.5)} ${f1(x+w)} ${by}Z" fill="${i%2?'var(--leaf)':'var(--leaf-2)'}" stroke="var(--leaf-var)" stroke-width="1.3"/>`;
       for(let q=1;q<4;q++){const yy=by-H*q/4;o+=`<path d="M${f1(x-w*.7+lean*q/6)} ${f1(yy)} q${f1(w*.7)} -3 ${f1(w*1.4)} 0" stroke="var(--stem)" stroke-width="1" opacity=".45" fill="none"/>`}}break}
   case'echeveria':{const rings=[0,1,2,3,3][s],sc=g*1.15;
-    if(s===4){o+=`<path d="M${bx} ${by-10} Q${bx+18} ${by-60} ${bx+30} ${by-78}" stroke="var(--succ-tip)" stroke-width="2" fill="none"/>`;for(let q=0;q<5;q++)o+=`<circle cx="${f1(bx+16+q*3.4)}" cy="${by-48-q*7}" r="3" fill="var(--flower)"/>`}
+    if(s>=3){const bt=bloomT(s,p),L=20+60*bt,ex=bx+10+20*bt,ey=by-10-L;o+=`<path d="M${bx} ${by-10} Q${bx+16} ${f1(by-10-L*.7)} ${f1(ex)} ${f1(ey)}" stroke="var(--succ-tip)" stroke-width="2" fill="none"/>`;
+      const nb=Math.round(2+bt*4);for(let q=0;q<nb;q++){const tt=1-q*.14,qx=lerp(bx+8,ex,tt),qy=lerp(by-20,ey,tt)+2;const open=bt>.5+q*.06;o+=`<g transform="translate(${f1(qx+3)} ${f1(qy)}) rotate(${open?150:170})"><path d="${open?'M-3 0 L-2.5 6 L0 4.5 L2.5 6 L3 0Z':'M-2 0 Q0 7 2 0Z'}" fill="${open?'var(--flower)':'var(--fruit-mid)'}"/></g>`}}
     for(let r=rings;r>=1;r--){const cnt=4+r*2,L=(10+r*9)*sc;for(let i=0;i<cnt;i++){const a=-80+160*i/(cnt-1);o+=`<g transform="translate(${bx} ${by-2}) rotate(${f1(a)})"><path d="${leafD(L,L*.6)}" fill="var(--succ)" stroke="var(--succ-tip)" stroke-width=".8" opacity="${(.75+.08*(rings-r)).toFixed(2)}"/></g>`}}
     o+=`<g transform="translate(${bx} ${by-2})"><path d="${leafD(10*sc,7*sc)}" fill="var(--succ)"/></g>`;break}
   case'basil':case'tomato':{const tom=k==='tomato',H=22+(tom?100:88)*t,nodes=Math.max(1,Math.round(1+s*1.6+p));
@@ -525,9 +679,9 @@ function drawPlant(k,s,p,seed,night){
     o+=stem(bx,by,bx+(R()-.5)*6,by-H,(R()-.5)*6,tom?3:2.6);
     for(let i=1;i<=nodes;i++){const y=by-H*i/(nodes+.6),L=(14+10*(1-i/(nodes+1)))*Math.max(.7,g)+4;
       if(tom){const side=i%2?1:-1,ex=bx+side*(16+L*.4),ey=y-6;o+=stem(bx,y,ex,ey,0,1.4);for(let q=0;q<3;q++){const lx=lerp(bx,ex,.4+q*.3),ly=lerp(y,ey,.4+q*.3);o+=leaf(lx,ly,side*(60+q*15),8,6,'var(--leaf)',leafD,false)+leaf(lx,ly,side*(130-q*10),7,5,'var(--leaf-2)',leafD,false)}
-        if(s>=3&&i>1&&i<nodes){if(s===4){for(let q=0;q<2;q++)o+=`<circle cx="${f1(bx-side*(6+q*8))}" cy="${f1(y+6+q*4)}" r="5.2" fill="var(--fruit)"/><path d="M${f1(bx-side*(6+q*8)-2)} ${f1(y+1+q*4)} l2 2 2 -2" stroke="var(--leaf)" stroke-width="1.2" fill="none"/>`}else o+=flower5(bx-side*8,y+4,3,'var(--sun)','var(--feed)')}}
+        if(s>=3&&i>1&&i<nodes){if(s===4){const rr=3.4+2.2*Math.min(1,p*1.6);for(let q=0;q<2;q++){const fx=bx-side*(6+q*8),fy=y+6+q*4;o+=`<path d="M${f1(bx-side*2)} ${f1(y)} Q${f1(fx)} ${f1(y)} ${f1(fx)} ${f1(fy-rr)}" stroke="var(--stem)" stroke-width=".9" fill="none"/><circle cx="${f1(fx)}" cy="${f1(fy)}" r="${f1(rr)}" fill="${ripeCol(Math.max(0,p-q*.12))}"/><circle cx="${f1(fx-rr*.35)}" cy="${f1(fy-rr*.35)}" r="${f1(rr*.25)}" fill="var(--pot-5)" opacity=".45"/><path d="M${f1(fx-2.4)} ${f1(fy-rr+.5)} l2.4 1.6 2.4 -1.6 M${f1(fx)} ${f1(fy-rr-1)} l0 2" stroke="var(--leaf)" stroke-width="1.1" fill="none"/>`}}else for(let q=0;q<2;q++)o+=`<g transform="rotate(${side*25+q*20} ${f1(bx-side*8)} ${f1(y+4)})">`+flower5(bx-side*(8+q*7),y+4+q*3,3.2,'var(--sun)','var(--feed)',Math.min(1,p*1.8-q*.3),6)+'</g>'}}
       else o+=leaf(bx,y,-62-(R()*10),L,L*.85,'var(--leaf-2)')+leaf(bx,y,62+(R()*10),L,L*.85,'var(--leaf)')}
-    if(!tom){o+=leaf(bx,by-H,-20,9,8,'var(--leaf-2)',leafD,false)+leaf(bx,by-H,20,9,8,'var(--leaf)',leafD,false);if(s===4)for(let q=0;q<5;q++)o+=`<circle cx="${bx+(q%2?2:-2)}" cy="${f1(by-H-6-q*5)}" r="2.4" fill="var(--pot-5)" stroke="var(--leaf)" stroke-width=".6"/>`}
+    if(!tom){o+=leaf(bx,by-H,-20,9,8,'var(--leaf-2)',leafD,false)+leaf(bx,by-H,20,9,8,'var(--leaf)',leafD,false);if(s===4){const nq=Math.round(2+p*5);o+=`<path d="M${bx} ${f1(by-H)} L${bx} ${f1(by-H-6-nq*4.5)}" stroke="var(--stem)" stroke-width="1.2"/>`;for(let q=0;q<nq;q++){const op=q<nq-1-p*2;o+=`<ellipse cx="${bx+(q%2?2.6:-2.6)}" cy="${f1(by-H-6-q*4.5)}" rx="${op?2.6:1.6}" ry="${op?1.8:2.2}" fill="${op?'var(--pot-5)':'var(--leaf-2)'}" stroke="var(--leaf)" stroke-width=".5"/>`}}}
     break}
   case'lavender':case'rosemary':{const rose=k==='rosemary';
     if(!rose)for(let i=0;i<10;i++){const a=-50+100*i/9+(R()-.5)*8;o+=leaf(bx+(R()-.5)*8,by,a,(14+R()*8)*g+4,3.5,'var(--succ)',leafD,false)}
@@ -536,16 +690,19 @@ function drawPlant(k,s,p,seed,night){
       if(rose){o+=`<path d="M${f1(x)} ${by} L${f1(tx)} ${f1(ty)}" stroke="var(--wood)" stroke-width="1.6" stroke-linecap="round"/>`;
         const cnt=Math.round(H/5);for(let q=1;q<cnt;q++){const px=lerp(x,tx,q/cnt),py=lerp(by,ty,q/cnt),ang=Math.atan2(tx-x,by-ty)*180/Math.PI;
           o+=`<g transform="translate(${f1(px)} ${f1(py)}) rotate(${f1(ang)})"><path d="M0 0 l-6 -4 M0 0 l6 -4" stroke="var(--succ)" stroke-width="1.7" stroke-linecap="round"/></g>`;
-          if(s===4&&q>cnt*.55&&q%2)o+=`<circle cx="${f1(px+3)}" cy="${f1(py-2)}" r="1.8" fill="var(--water)" opacity=".85"/>`}}
+          if(s>=3&&q>cnt*(1-.5*bloomT(s,p))&&q%2)o+=flower5(px+3.5,py-2,2.1,'var(--water)','var(--pot-5)',Math.min(1,bloomT(s,p)*1.6),5)}}
       else{o+=stem(x,by,tx,ty,(R()-.5)*6,1.3);
-        if(s===4||(s===3&&i%2===0)||(s===2&&p>.7&&i===0))for(let q=0;q<6;q++){const yy=ty+q*3.6,xx=tx-lean*q*3.6/H;o+=`<ellipse cx="${f1(xx-1.6)}" cy="${f1(yy)}" rx="2" ry="2.6" fill="var(--bloom)"/><ellipse cx="${f1(xx+1.6)}" cy="${f1(yy+1.5)}" rx="2" ry="2.6" fill="var(--bloom)" opacity=".85"/>`}}}
+        const bt=Math.max(0,bloomT(s,p)-(i%3)*.08)+(s===2?p*.12:0);if(bt>0){const nf=8,spike=Math.min(1,bt*2.2);for(let q=0;q<nf*spike;q++){const yy=ty+q*3.4,xx=tx-lean*q*3.4/H,open=q>=nf-bt*nf*1.1;
+          o+=open?`<ellipse cx="${f1(xx-1.7)}" cy="${f1(yy)}" rx="2.1" ry="2.5" fill="var(--bloom)"/><ellipse cx="${f1(xx+1.7)}" cy="${f1(yy+1.4)}" rx="2.1" ry="2.5" fill="var(--bloom)" opacity=".85"/><circle cx="${f1(xx)}" cy="${f1(yy-1.2)}" r=".8" fill="var(--pot-5)" opacity=".6"/>`
+                 :`<ellipse cx="${f1(xx-1.1)}" cy="${f1(yy)}" rx="1.3" ry="2" fill="var(--bloom-bud)"/><ellipse cx="${f1(xx+1.1)}" cy="${f1(yy+1.2)}" rx="1.3" ry="2" fill="var(--bloom-bud)"/>`}}}}
     break}
   case'cereus':{const H=26+84*t,W=24;
     const col=(x,y,w,h)=>`<path d="M${f1(x-w/2)} ${f1(y)} L${f1(x-w/2)} ${f1(y-h+w/2)} A${w/2} ${w/2} 0 0 1 ${f1(x+w/2)} ${f1(y-h+w/2)} L${f1(x+w/2)} ${f1(y)}Z" fill="var(--leaf-2)"/><path d="M${f1(x)} ${f1(y)} L${f1(x)} ${f1(y-h+3)} M${f1(x-w/4)} ${f1(y)} L${f1(x-w/4)} ${f1(y-h+w/2+2)} M${f1(x+w/4)} ${f1(y)} L${f1(x+w/4)} ${f1(y-h+w/2+2)}" stroke="var(--leaf)" stroke-width="1.4"/>`;
     if(s>=3){const ay=by-H*.42;o+=`<path d="M${bx+W/2-2} ${f1(ay)} q16 0 16 -10" stroke="var(--leaf-2)" stroke-width="11" fill="none" stroke-linecap="round"/>`+col(bx+W/2+14,ay-8,13,24*g+8)}
     if(s===4){const ay=by-H*.6;o+=`<path d="M${bx-W/2+2} ${f1(ay)} q-14 0 -14 -8" stroke="var(--leaf-2)" stroke-width="10" fill="none" stroke-linecap="round"/>`+col(bx-W/2-12,ay-6,12,18*g+6)}
     o+=col(bx,by,W,H);for(let q=0;q<7;q++){const yy=by-8-q*(H-14)/7;o+=`<circle cx="${bx-W/4}" cy="${f1(yy)}" r=".9" fill="var(--ink)" opacity=".45"/><circle cx="${bx+W/4}" cy="${f1(yy+4)}" r=".9" fill="var(--ink)" opacity=".45"/>`}
-    if(s===4)o+=`<g transform="translate(${bx} ${f1(by-H-2)})">${[0,72,144,216,288].map(a=>`<ellipse rx="3.2" ry="7" cy="-5" fill="var(--flower)" transform="rotate(${a})"/>`).join('')}<circle r="2.5" fill="var(--sun)"/></g>`;break}
+    if(s>=3){const bt=bloomT(s,p);if(bt>.1){const tx=bx,ty=by-H-2;if(bt<.45){const L=4+bt*16;o+=`<path d="M${tx-3} ${ty+2} Q${tx-4} ${f1(ty-L*.6)} ${tx} ${f1(ty-L)} Q${tx+4} ${f1(ty-L*.6)} ${tx+3} ${ty+2}Z" fill="var(--leaf-2)"/><path d="M${tx-1.5} ${f1(ty-L*.5)} Q${tx} ${f1(ty-L*1.05)} ${tx+1.5} ${f1(ty-L*.5)}" fill="var(--flower)"/>`}
+      else{const k=Math.min(1,(bt-.45)/.45);o+=`<g transform="translate(${tx} ${ty})">`;for(let q=0;q<10;q++)o+=`<ellipse rx="${f1(2.4+k)}" ry="${f1(5+5*k)}" cy="${f1(-4-5*k)}" fill="var(--flower)" opacity="${q%2?.8:1}" transform="rotate(${f1(-80+q*16*(.6+.4*k))})"/>`;o+=`<circle r="2.4" fill="var(--sun)"/>${[0,1,2,3,4].map(q=>`<path d="M0 0 L${f1(Math.cos(q*.5-1.6)*5)} ${f1(Math.sin(q*.5-1.6)*5-2)}" stroke="var(--feed)" stroke-width=".7"/>`).join('')}</g>`}}}break}
   case'ficus':{const H=24+96*t,n=1+s*2;
     o+=stem(bx,by,bx+3,by-H,4,3.6,'var(--wood)');
     for(let i=0;i<n;i++){const y=by-H*(.22+.72*i/n),side=i%2?1:-1,L=(20+R()*6)*g+9;
@@ -567,29 +724,55 @@ function drawPlant(k,s,p,seed,night){
       for(let q=0;q<m;q++){const tt=.35+.65*q/m,px=lerp(bx,x,tt),py=lerp(by,y,tt);o+=leaf(px,py,a-48,(9+R()*2)*Math.max(.8,g)+2,6,'var(--leaf-deep)',leafD,false,` stroke="var(--leaf)" stroke-width=".5"`)+leaf(px,py,a+48,(9+R()*2)*Math.max(.8,g)+2,6,'var(--leaf-deep)',leafD,false,` stroke="var(--leaf)" stroke-width=".5"`)}
       o+=leaf(x,y,a,8,5,'var(--leaf-deep)',leafD,false)}break}
   case'strawberry':{const n=[0,3,4,6,7][s];
-    if(s===4){for(const side of[-1,1]){o+=`<path d="M${bx+side*8} ${by-6} Q${bx+side*40} ${by-26} ${bx+side*53} ${by+4}" stroke="var(--stem)" stroke-width="1.2" fill="none"/>`;
-      o+=`<g transform="translate(${bx+side*53} ${by+4})"><path d="M0 -4 C6 -4 6 6 0 12 C-6 6 -6 -4 0 -4Z" fill="var(--fruit)"/><path d="M-3 -4 l3 -3 3 3" stroke="var(--leaf)" stroke-width="1.6" fill="none"/>${[[-2,1],[2,2],[0,6],[-1,4],[2,-1]].map(d=>`<circle cx="${d[0]}" cy="${d[1]}" r=".6" fill="var(--sun)"/>`).join('')}</g>`}}
+    if(s===4){const sc=.6+.4*Math.min(1,p*1.5),col=p<.3?'var(--pot-5)':p<.6?'var(--fruit-mid)':'var(--fruit)';for(const side of[-1,1]){o+=`<path d="M${bx+side*8} ${by-6} Q${bx+side*40} ${by-26} ${bx+side*53} ${by+4}" stroke="var(--stem)" stroke-width="1.2" fill="none"/>`;
+      o+=`<g transform="translate(${bx+side*53} ${by+4}) scale(${f1(sc)})"><path d="M0 -4 C7 -4 6.5 6 0 12 C-6.5 6 -7 -4 0 -4Z" fill="${col}"/><path d="M-4 -4 l2 -2 2 1.5 2 -1.5 2 2" stroke="var(--leaf)" stroke-width="1.6" fill="none"/>${[[-2,1],[2,2],[0,6],[-1,4],[2,-1],[-3,-1],[1,9]].map(d=>`<circle cx="${d[0]}" cy="${d[1]}" r=".6" fill="${p<.6?'var(--leaf-var)':'var(--sun)'}"/>`).join('')}</g>`}
+      if(p>.5)o+=`<path d="M${bx+40} ${by-14} Q${bx+70} ${by-30} ${bx+88} ${by-6}" stroke="var(--stem)" stroke-width="1" fill="none" stroke-dasharray="1 0"/>`+leaf(bx+88,by-6,30,8,6,'var(--leaf-2)',leafD,false)}
     for(let i=0;i<n;i++){const a=(n===1?0:-60+120*i/(n-1))+(R()-.5)*10,P=(20+R()*14)*g,rad=a*Math.PI/180,x=bx+Math.sin(rad)*P,y=by-Math.cos(rad)*P,L=(10+R()*3)*g+5;
       o+=stem(bx,by,x,y,(R()-.5)*6,1.4);for(const d of[-34,0,34])o+=leaf(x,y,a+d,L,L*.8,i%2?'var(--leaf)':'var(--leaf-2)')}
-    if(s===3)for(let i=0;i<3;i++)o+=flower5(bx-16+i*16,by-30*g-6-(i%2)*6,3.6,'var(--pot-5)','var(--sun)');
+    if(s===3)for(let i=0;i<3;i++){const fx=bx-16+i*16,fy=by-30*g-6-(i%2)*6;o+=stem(bx,by-6,fx,fy,(i-1)*4,1)+flower5(fx,fy,4,'var(--pot-5)','var(--sun)',Math.min(1,p*1.6-i*.15))}
     break}
-  case'sunflower':{const H=24+110*t,n=Math.max(1,Math.round(1+s*1.5));
+  case'sunflower':{const H=22+96*t,n=Math.max(1,Math.round(1+s*1.5));
     o+=stem(bx,by,bx+4,by-H,(R()-.5)*6,3.6);
     for(let i=0;i<n;i++){const y=by-H*(.2+.62*i/n),side=i%2?1:-1,L=(18+R()*6)*g+8;o+=leaf(bx+side,y,side*(68+R()*12),L,L*.85,i%2?'var(--leaf)':'var(--leaf-2)',heartD)}
     const hx=bx+4,hy=by-H;
-    if(s===3)o+=`<ellipse cx="${hx}" cy="${f1(hy)}" rx="8" ry="7" fill="var(--leaf)"/>`+(p>.5?`<ellipse cx="${hx}" cy="${f1(hy-1)}" rx="5" ry="3" fill="var(--sun)"/>`:'');
-    if(s===4){o+=`<g transform="translate(${hx} ${f1(hy)}) rotate(-12)">`;for(let q=0;q<16;q++)o+=`<ellipse rx="3.4" ry="8" cy="-13" fill="var(--sun)" transform="rotate(${q*22.5})"/>`;o+=`<circle r="9.5" fill="var(--wood)"/><circle r="6" fill="var(--soil)"/></g>`}
+    if(s>=3)o+=sunHead(hx,hy,bloomT(s,p));
     break}
   }
   return o;
 }
 function potSVG(k,s,p,seed,potIdx,opts){
-  opts=opts||{};const pot=POTS[potIdx==null?SPECIES[k].pot:potIdx];
-  return `<svg viewBox="0 0 200 230" role="img" aria-label="${SPECIES[k].name} ${STAGES[s]}"><ellipse cx="100" cy="225" rx="42" ry="3.5" fill="var(--shade)"/>`+
-   `<g class="${opts.sway?'sway':''}">${drawPlant(k,s,p,seed,opts.night)}</g>`+
-   `<path d="M62 168 L138 168 L130 221 Q129 224 126 224 L74 224 Q71 224 70 221Z" fill="${pot}"/><path d="M67 173 L71 217" stroke="var(--pot-5)" stroke-width="3" opacity=".3" stroke-linecap="round"/>`+
-   `<rect x="56" y="156" width="88" height="15" rx="4" fill="${pot}"/><rect x="56" y="166" width="88" height="5" fill="var(--shade)"/><ellipse cx="100" cy="159" rx="40" ry="3.5" fill="var(--soil)"/></svg>`;
+  if(SPECIES[k].hang)return hangSVG(k,s,p,seed,potIdx,opts);
+  opts=opts||{};const pot=POTS[potIdx==null?SPECIES[k].pot:potIdx]||POTS[0],style=opts.style||'basic';
+  return `<svg viewBox="0 0 200 230" role="img" aria-label="${SPECIES[k].name} ${STAGES[s]}"><ellipse cx="100" cy="225" rx="44" ry="3.5" fill="var(--shade)"/>`+
+   `<g class="${opts.sway&&hpState(opts.hp??100)!=='dead'?'sway':''}">${hpWrap(drawPlant(k,s,p,seed,opts.night),opts.hp,false)}</g>`+drawPot(style,pot,++potUid)+
+   `<ellipse cx="100" cy="159" rx="${style==='bowl'?50:style==='round'?32:40}" ry="3.5" fill="var(--soil)"/></svg>`;
 }
+function hangSVG(k,s,p,seed,potIdx,opts){
+  opts=opts||{};const sp=SPECIES[k],col=POTS[potIdx==null?sp.pot:potIdx]||POTS[0],R=rng(seed+k),t=(s+p)/4,cx=100;
+  let o=`<svg viewBox="0 0 200 230" role="img" aria-label="${sp.name} ${STAGES[s]}"><g class="${opts.sway?'sway hangs':''}">`;
+  const air=!!sp.airplant,rimY=air?34:46;
+  if(air){o+=`<path d="M${cx} 0 L${cx} 26" stroke="var(--wood)" stroke-width="1.2"/><circle cx="${cx}" cy="30" r="5" fill="none" stroke="var(--wood)" stroke-width="1.6"/>`}
+  else o+=`<path d="M${cx} 0 L62 ${rimY} M${cx} 0 L138 ${rimY} M${cx} 0 L${cx} ${rimY}" stroke="var(--wood)" stroke-width="1.1" opacity=".8"/><circle cx="${cx}" cy="3" r="3" fill="none" stroke="var(--wood)" stroke-width="1.4"/>`;
+  // plant strands (drawn before pot so they hang over the rim)
+  let pl='';
+  if(s===0){pl+=air?`<path d="M${cx-4} 34 q4 10 0 18 M${cx+3} 34 q-3 9 1 16" stroke="var(--frame)" stroke-width="1.4" fill="none"/>`:''}
+  else if(k==='pearls'){const n=[0,2,3,5,7][s];for(let i=0;i<n;i++){const sx=64+R()*72,len=14+(30+R()*40)*t*1.9,sway=(R()-.5)*20;let px=sx,py=rimY+2;
+      for(let d=0;d<len;d+=5.2){const tt=d/len,x=sx+Math.sin(tt*3+i)*sway*tt,y=rimY+4+d;pl+=`<line x1="${f1(px)}" y1="${f1(py)}" x2="${f1(x)}" y2="${f1(y)}" stroke="var(--stem)" stroke-width=".8"/><circle cx="${f1(x)}" cy="${f1(y)}" r="3.3" fill="var(--succ)"/><path d="M${f1(x-1.6)} ${f1(y-.6)} q1.6 1.4 3.2 0" stroke="var(--pot-5)" stroke-width=".7" fill="none" opacity=".7"/>`;px=x;py=y}
+      if(s>=3&&i%2===0){const bt=bloomT(s,p);if(bt>.1)pl+=`<path d="M${f1(sx)} ${rimY} q${f1(4-R()*8)} -10 ${f1(2-R()*4)} -16" stroke="var(--stem)" stroke-width=".8" fill="none"/>`+flower5(sx+(R()-.5)*3,rimY-16,3.2,'var(--pot-5)','var(--fruit-mid)',bt,8)}}}
+  else if(k==='rhipsalis'){const n=[0,3,5,7,9][s];for(let i=0;i<n;i++){const sx=66+R()*68,len=10+(40+R()*50)*t*1.7,bend=(R()-.5)*30;const ex=sx+bend,ey=rimY+len;
+      pl+=`<path d="M${f1(sx)} ${rimY} Q${f1(sx+bend*.2)} ${f1(rimY+len*.5)} ${f1(ex)} ${f1(ey)}" stroke="var(--leaf-2)" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+      if(len>40){const bx2=lerp(sx,ex,.55),by2=lerp(rimY,ey,.55);pl+=`<path d="M${f1(bx2)} ${f1(by2)} q${f1((R()-.5)*16)} 12 ${f1((R()-.5)*20)} 26" stroke="var(--leaf)" stroke-width="1.8" fill="none" stroke-linecap="round"/>`}
+      if(s>=3&&i%2===0){const bt=bloomT(s,p);for(let q=0;q<3;q++){const yy=lerp(rimY,ey,.35+q*.2),xx=lerp(sx,ex,.35+q*.2);pl+=s===4&&p>.4?`<circle cx="${f1(xx+2)}" cy="${f1(yy)}" r="2.3" fill="var(--pot-5)" stroke="var(--frame)" stroke-width=".5"/>`:(bt>.1?flower5(xx+2,yy,2,'var(--pot-5)','var(--leaf-var)',bt,6):'')}}}}
+  else if(k==='tillandsia'){const n=[0,4,7,10,13][s];for(let i=0;i<n;i++){const sx=cx+(R()-.5)*14,len=12+(35+R()*45)*t*2;let d=`M${f1(sx)} 34`;let x=sx,y=34;
+      while(y<34+len){x+=(R()-.5)*7;y+=5+R()*3;d+=` L${f1(x)} ${f1(y)}`}
+      pl+=`<path d="${d}" stroke="${i%2?'var(--frame)':'var(--succ)'}" stroke-width="${i%3?1.3:1.8}" fill="none" stroke-linejoin="round" opacity=".95"/>`;
+      if(s===4&&i%4===0&&p>.3)pl+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="1.6" fill="var(--leaf-var)"/>`}}
+  if(!air&&s>0)for(let q=0;q<3+s;q++){pl+=leaf(cx-24+q*48/(3+s),rimY-1,(q-(2+s)/2)*18,6+s*1.5,4,'var(--leaf-2)',leafD,false)}
+  if(!air&&s===0)pl+=stem(cx,rimY,cx,rimY-9-6*p,1,1.6)+leaf(cx,rimY-9-6*p,-50,6,5,'var(--leaf-2)',leafD,false)+leaf(cx,rimY-9-6*p,50,6,5,'var(--leaf-2)',leafD,false);
+  if(!air)o+=`<path d="M58 ${rimY+3} L142 ${rimY+3} Q140 ${rimY+36} 100 ${rimY+38} Q60 ${rimY+36} 58 ${rimY+3}Z" fill="${col}"/><rect x="56" y="${rimY-2}" width="88" height="7" rx="3" fill="${col}"/><rect x="56" y="${rimY+3}" width="88" height="3" fill="var(--shade)"/><ellipse cx="${cx}" cy="${rimY}" rx="40" ry="2.6" fill="var(--soil)"/>`;
+  return o+hpWrap(pl,opts.hp,true)+`</g></svg>`;
+}
+function potOnly(style,col){return `<svg viewBox="40 150 120 80">${drawPot(style,col,++potUid)}<ellipse cx="100" cy="159" rx="${style==='bowl'?50:style==='round'?32:40}" ry="3.5" fill="var(--soil)"/></svg>`}
 
 /* =============== render =============== */
 const $=id=>document.getElementById(id);
@@ -597,7 +780,7 @@ let note='',bookTab='dex',shopFilter='all';
 const active=()=>S.plants.find(p=>p.id===S.active)||S.plants[0];
 const pname=p=>p.nick||SPECIES[p.sp].name;
 const stageName=(sp,s)=>s===4?sp.final:STAGES[s];
-function need(p){const sp=SPECIES[p.sp];if(p.water<sp.band[0])return'물';if(p.water>sp.band[1]+8)return'과습';if(p.feed<=15)return'영양';return''}
+function need(p){const sp=SPECIES[p.sp],hs=hpState(p.health??100);if(hs!=='ok')return HP_LABEL[hs];if(p.water<sp.band[0])return'물';if(p.water>sp.band[1]+8)return'과습';if(p.feed<=15)return'영양';return''}
 
 function renderScene(){
   const now=Date.now(),gh=gameHours(now),ph=phase(gh),h=hourOfDay(gh),win=$('win');
@@ -620,7 +803,8 @@ function renderGarden(){
   renderScene();
   const p=active(),sp=SPECIES[p.sp],st=stageOf(p.xp),night=!isDay(gameHours(Date.now())),fc=forecast(p);
   if(!$('name-box').querySelector('input')){$('p-name').textContent=pname(p);$('p-latin').textContent=(p.nick?sp.name+' · ':'')+sp.latin}
-  $('plant').innerHTML=potSVG(p.sp,st.s,st.p,p.id,p.pot,{sway:true,night});
+  $('plant').classList.toggle('hang',!!sp.hang);
+  $('plant').innerHTML=potSVG(p.sp,st.s,st.p,p.id,p.pot,{sway:true,night,style:p.potStyle,hp:p.health});
   $('stage-line').innerHTML=[1,2,3,4].map(i=>`<span><i style="width:${st.s>=i?100:st.s===i-1?(st.p*100).toFixed(0):0}%"></i></span>`).join('');
   $('stage-names').innerHTML=STAGES.map((n,i)=>i===st.s?`<b>${stageName(sp,i)}</b>`:`<span>${stageName(sp,i)}</span>`).join('');
   const tip=gh=>`현실 ${fmtReal(gh)}`;
@@ -638,15 +822,17 @@ function renderGarden(){
   else{const h=p.feed>=50?fc.feed50:fc.feed15;ns=`${fmtGame(h)} 버팀`;nt=tip(h)}
   vital('v-feed','var(--feed)','영양',Math.round(p.feed)+'%',ns,nw,`<span style="left:0;width:${p.feed}%;background:var(--feed)"></span>`,`50% 이상이면 1.5배로 자라요${nt?' · '+nt:''}`);
   // 성장
-  if(st.s>=4)vital('v-grow','var(--grow)','성장','완료',sp.final,false,`<span style="left:0;width:100%;background:var(--grow)"></span>`);
-  else{const blocked=!inBand(sp,p.water)?'물이 맞아야 자라요':p.feed<=15?'영양이 필요해요':'';
+  if(st.s>=4)vital('v-grow','var(--grow)','성장','완료',hpState(p.health??100)==='ok'?sp.final:HP_LABEL[hpState(p.health)],hpState(p.health??100)!=='ok',`<span style="left:0;width:100%;background:var(--grow)"></span>`);
+  else{const hs=hpState(p.health??100);const blocked=hs==='dead'?'말라버렸어요':hs==='critical'?'회복이 먼저예요':!inBand(sp,p.water)?'물이 맞아야 자라요':p.feed<=15?'영양이 필요해요':'';
     vital('v-grow','var(--grow)','→ '+stageName(sp,st.s+1),Math.floor(st.p*100)+'%',blocked||`${fmtGame(fc.stage)} 뒤`,!!blocked,`<span style="left:0;width:${st.p*100}%;background:var(--grow)"></span>`,blocked?'':`${stageName(sp,st.s+1)}까지 ${tip(fc.stage)}`)}
   // buttons
+  const ex=extraAction(p),eb=$('a-extra');eb.hidden=!ex;if(ex){eb.innerHTML=ex.icon+`<span>${ex.label}<small>${ex.sub}</small></span>`;eb.disabled=!!ex.disabled}
+  $('acct-banner').hidden=!(WEB&&!AUTH&&!S.bannerOff);
   $('a-feed').disabled=S.dew<3;
   const cd=Math.max(0,Math.ceil((p.lastWipe+2*GH-Date.now())/60000));$('wipe-cd').textContent=cd>0?`${cd}분 후`:'무료';$('a-wipe').disabled=cd>0;
   $('note').innerHTML=note||(night?`밤에는 광합성을 하지 않아요. 물은 낮보다 천천히 말라요.`:`<b>${sp.name}</b> · ${sp.care.join(' · ')}`);
   // shelf
-  $('shelf').innerHTML=S.plants.map(q=>{const t=stageOf(q.xp),n=need(q);return `<button class="slot${q.id===p.id?' on':''}" data-id="${q.id}">${potSVG(q.sp,t.s,t.p,q.id,q.pot,{night})}<span>${pname(q)}</span><span class="tag${n?' need':''}">${n?(n==='과습'?'과습':n+' 필요'):stageName(SPECIES[q.sp],t.s)}</span></button>`}).join('')
+  $('shelf').innerHTML=S.plants.map(q=>{const t=stageOf(q.xp),n=need(q);return `<button class="slot${q.id===p.id?' on':''}" data-id="${q.id}">${potSVG(q.sp,t.s,t.p,q.id,q.pot,{night,style:q.potStyle,hp:q.health})}<span>${pname(q)}</span><span class="tag${n?' need':''}">${n?(['과습','시듦','위독','말라버림'].includes(n)?n:n+' 필요'):stageName(SPECIES[q.sp],t.s)}</span></button>`}).join('')
     +(S.plants.length<10?`<button class="slot add" data-go="shop"><span>+</span><span>들이기</span></button>`:'');
   $('shelf-count').textContent=`${S.plants.length} / 10`;
   $('dew').textContent=S.dew;
@@ -669,7 +855,13 @@ function renderBook(){
   else if(bookTab==='wrong'){
     $('book').innerHTML=S.wrong.length?S.wrong.slice().reverse().map(i=>{const q=QUIZ[i];return `<div class="wrongq"><b>${q.q}</b><span class="ans">${q.o[q.a]}</span><p>${q.e}</p></div>`}).join('')+`<button class="ghost" id="retry-wrong" style="margin-top:8px">틀린 문제 다시 풀기 →</button>`:`<p class="empty">틀린 문제가 여기에 모여요. 다시 맞히면 노트에서 빠져요.</p>`}
   else if(bookTab==='save'){
-    $('book').innerHTML=`<div class="save-box"><p>진행 상황은 이 기기에 자동으로 저장돼요. 창을 닫았다가 다시 와도 그대로 이어져요.${dbDoc?' 지금은 계정에도 함께 저장되고 있어요.':''}</p>
+    const acct=!WEB?'':AUTH?`<div class="acct"><b class="t">${AUTH.id} 계정으로 저장 중</b><p>폰이나 다른 컴퓨터에서도 같은 아이디로 로그인하면 이 정원이 그대로 이어져요. <span class="ok">${cloudState==='error'?'':'자동 저장 켜짐'}</span></p><div class="row2"><button class="chip-btn" id="acct-sync">지금 동기화</button><button class="chip-btn" id="acct-out">로그아웃</button></div></div>`
+      :`<div class="acct" id="acct-form"><b class="t">계정으로 어디서나 이어 키우기</b><p>아이디와 비밀번호만 정하면 돼요. 이메일이나 전화번호는 받지 않아요.</p>
+        <input id="acct-id" autocomplete="username" placeholder="아이디 (영문·숫자·한글 3~20자)" maxlength="20" aria-label="아이디">
+        <input id="acct-pw" type="password" autocomplete="current-password" placeholder="비밀번호 (6자 이상)" aria-label="비밀번호">
+        <div class="err" id="acct-err"></div>
+        <div class="row2"><button class="chip-btn solid" id="acct-login">로그인</button><button class="chip-btn" id="acct-new">이 정원으로 새 계정 만들기</button></div></div>`;
+    $('book').innerHTML=acct+`<div class="save-box"><p>진행 상황은 이 기기에도 자동으로 저장돼요. 창을 닫았다가 다시 와도 그대로 이어져요.${dbDoc?' 지금은 Claude 계정에도 함께 저장되고 있어요.':''}</p>
       <p><b style="color:var(--ink)">다른 기기로 옮기기</b><br>아래 저장 코드를 복사해 두었다가, 새 기기의 같은 칸에 붙여 넣고 불러오면 돼요.</p>
       <textarea id="save-code" readonly aria-label="저장 코드">${exportCode()}</textarea>
       <div class="btns"><button class="chip-btn solid" id="copy-code">코드 복사</button></div>
@@ -686,17 +878,100 @@ function logIt(t){S.log.push({g:shortStamp(Date.now()),t});if(S.log.length>60)S.
 function stageUp(p,s,silent){const sp=SPECIES[p.sp];logIt(`${pname(p)}이(가) ${stageName(sp,s)} 단계가 됐어요`);if(!silent)setTimeout(()=>toast(`${pname(p)}이(가) ${stageName(sp,s)} 단계로 자랐어요`),400)}
 function gain(p,x){const b=stageOf(p.xp).s;p.xp+=x;const a=stageOf(p.xp).s;if(a>b)stageUp(p,a)}
 const fact=p=>{const f=SPECIES[p.sp].facts;return f[Math.floor(Math.random()*f.length)]};
+const HARVEST={tomato:{n:'방울토마토',dew:18},strawberry:{n:'딸기',dew:18},basil:{n:'바질 잎',dew:12},rosemary:{n:'로즈마리 가지',dew:12},lavender:{n:'라벤더 꽃',dew:14},sunflower:{n:'해바라기 씨',dew:20}};
+const ICON_BASKET=`<svg viewBox="0 0 24 24" fill="none" stroke="var(--feed)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16l-2 9H6z"/><path d="M8 10l3-5M16 10l-3-5"/></svg>`;
+const ICON_CUT=`<svg viewBox="0 0 24 24" fill="none" stroke="var(--leaf)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M7.5 16 17 5M16.5 16 7 5"/></svg>`;
+const reviveCost=p=>(p.health??100)<=0?20:Math.ceil((50-(p.health??100))/4)+4;
+const ICON_HEART=`<svg viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>`;
+function extraAction(p){
+  if((p.health??100)<50){const c=reviveCost(p);return{kind:'revive',icon:ICON_HEART,label:'살리기',sub:`이슬 ${c}`,disabled:S.dew<c}}
+  const st=stageOf(p.xp);if(st.s<4)return null;
+  const h=HARVEST[p.sp];
+  if(h){const ripe=st.p>=.6;return{kind:'harvest',icon:ICON_BASKET,label:'수확',sub:ripe?`이슬 ${h.dew}`:`${Math.round((.6-st.p)/.6*100)}% 남음`,disabled:!ripe}}
+  const cdGame=3*24,left=p.lastCut?cdGame-(Date.now()-p.lastCut)/GH:0;
+  return{kind:'cut',icon:ICON_CUT,label:'꺾꽂이',sub:left>0?`${fmtGame(left)} 후`:(S.plants.length>=10?'선반 가득':'새 화분'),disabled:left>0||S.plants.length>=10};
+}
+$('a-extra').onclick=()=>{tick();const p=active(),ex=extraAction(p);if(!ex||ex.disabled)return;const sp=SPECIES[p.sp];
+  if(ex.kind==='revive'){const c=reviveCost(p),wasDead=(p.health??100)<=0,why=p.water>sp.band[1]?'흙이 너무 오래 젖어 뿌리가 숨을 못 쉬었어요(과습)':'흙이 오래 말라 잎의 팽압이 떨어졌어요';
+    S.dew-=c;p.water=Math.round((sp.band[0]+sp.band[1])/2);p.health=wasDead?60:75;p.feed=Math.max(p.feed,35);fx('drop',10);fx('spark',8);
+    note=`<b>${pname(p)}이(가) 다시 기운을 차렸어요.</b> ${why}. 수분이 알맞으면 건강이 조금씩 차올라요.`;logIt(`${pname(p)}을(를) 살렸어요 · 이슬 ${c}`);toast(`${pname(p)} 회복 중`);save();renderGarden();return}
+  if(ex.kind==='harvest'){const h=HARVEST[p.sp];S.dew+=h.dew;p.xp=XP[3]+(XP[4]-XP[3])*.55;fx('spark',14);note=`<b>${h.n}을(를) 수확했어요. 이슬 +${h.dew}</b> 식물은 다시 꽃을 피우고 열매를 맺어요.`;logIt(`${pname(p)}에서 ${h.n}을(를) 수확했어요`);toast(`수확 완료 · 이슬 +${h.dew}`)}
+  else{p.lastCut=Date.now();const now=Date.now(),id='p'+now.toString(36);S.plants.push({id,sp:p.sp,xp:22,water:Math.round((sp.band[0]+sp.band[1])/2),feed:45,lastTick:now,lastWater:now,lastWipe:0,born:now,nick:'',pot:p.pot,potStyle:'basic'});
+    note=`<b>꺾꽂이로 새 ${sp.name}을(를) 얻었어요.</b> 줄기 마디에서 새 뿌리가 나오는 영양번식이에요. 유전적으로 어미와 같은 개체예요.`;logIt(`${pname(p)}을(를) 꺾꽂이해서 새 화분을 만들었어요`);toast('선반에 새 화분이 생겼어요')}
+  save();renderGarden()};
 
 $('a-water').onclick=()=>{tick();const p=active(),sp=SPECIES[p.sp],b=sp.band;
   if(p.water>b[1]){p.water=Math.min(100,p.water+8);note=`<b>이미 촉촉해요.</b> ${sp.name}은(는) ${b[0]}~${b[1]}%가 좋아요. 흙이 계속 젖어 있으면 뿌리가 숨을 못 쉬어요.`;fx('drop',4)}
-  else{p.water=Math.min(100,p.water+25);p.lastWater=Date.now();const ok=p.water<=b[1]+5;if(ok)gain(p,4);
+  else{p.water=Math.min(100,p.water+25);p.lastWater=Date.now();const ok=p.water<=b[1]+5;if(ok)gain(p,4);if(sp.airplant&&ok){note=`<b>분무해줬어요.</b> ${fact(p)}`;fx('drop',10);save();renderGarden();return}
     note=ok?`<b>물을 줬어요.</b> ${fact(p)}`:`<b>조금 많이 줬어요.</b> 받침에 고인 물은 버린다고 생각해 주세요.`;fx('drop',10)}
   save();renderGarden()};
 $('a-feed').onclick=()=>{tick();const p=active();if(S.dew<3)return;
   if(p.feed>=75){note='<b>영양분은 충분해요.</b> 비료가 너무 많으면 흙에 염류가 쌓여 뿌리 끝이 타요.';renderGarden();return}
   S.dew-=3;p.feed=Math.min(100,p.feed+30);gain(p,6);fx('spark',10);note='<b>영양제를 줬어요.</b> 잎은 질소, 꽃과 뿌리는 인, 튼튼함은 칼륨이 맡아요.';save();renderGarden()};
 $('a-wipe').onclick=()=>{tick();const p=active();p.lastWipe=Date.now();gain(p,2);note='<b>잎을 닦아줬어요.</b> 먼지가 빠지면 빛을 더 잘 받고 기공도 숨쉬기 편해져요.';save();renderGarden()};
-$('b-pot').onclick=()=>{const p=active();p.pot=((p.pot??0)+1)%POTS.length;save();renderGarden()};
+function openSheet(html){$('pot-panel').innerHTML=html;$('pot-sheet').hidden=false}
+const refundOf=p=>{const sp=SPECIES[p.sp],st=stageOf(p.xp);return Math.floor(sp.cost*.3)+st.s};
+$('b-drop').onclick=()=>{const p=active(),sp=SPECIES[p.sp];
+  if(S.plants.length<=1){toast('마지막 화분은 버릴 수 없어요');return}
+  openSheet(`<div class="sec-h"><h3>${pname(p)} 보내기</h3><button class="chip-btn" id="pot-close">취소</button></div>
+    <div class="preview">${potSVG(p.sp,stageOf(p.xp).s,stageOf(p.xp).p,p.id,p.pot,{style:p.potStyle})}</div>
+    <p style="margin:0;font-size:.9rem">이 화분을 정원에서 치울까요? 들일 때 쓴 이슬 ${sp.cost}개 중 <b style="color:var(--water)">${refundOf(p)}개</b>만 돌려받아요. 되돌릴 수 없어요.</p>
+    <button class="ff-opt danger" id="drop-yes" style="justify-content:center;font-weight:600">${pname(p)} 버리기</button>`)};
+const FF_STEPS=[1,2,3,4,6,8,12,18,24,36,48,72,96,120,168];
+const ffCost=h=>Math.max(1,Math.round(1.25*Math.pow(h,.82)));
+const ffLabel=h=>h<24?`${h}시간`:h%24===0?`${h/24}일`:`${Math.floor(h/24)}일 ${h%24}시간`;
+let ffIdx=8;
+function simFF(h,list){ // list에 적용하고 단계가 오른 화분 수를 돌려줘요
+  let gh=gameHours(Date.now()),ups=0;
+  list.forEach(p=>{const sp=SPECIES[p.sp],mid=(sp.band[0]+sp.band[1])/2,b=stageOf(p.xp).s;for(let x=0;x<h;x+=.25){if(p.water<sp.band[0]+3)p.water=mid;stepPlant(p,sp,.25,gh+x)}if(stageOf(p.xp).s>b)ups++});
+  return ups;
+}
+function renderFF(){
+  const h=FF_STEPS[ffIdx],c=ffCost(h),copy=JSON.parse(JSON.stringify(S.plants)),ups=simFF(h,copy),perH=(c/h).toFixed(2).replace(/\.?0+$/,'');
+  const grow=copy.map((q,i)=>{const a=stageOf(S.plants[i].xp).s,b=stageOf(q.xp).s;return b>a?`${pname(S.plants[i])} → ${stageName(SPECIES[q.sp],b)}`:''}).filter(Boolean);
+  openSheet(`<div class="sec-h"><h3>빨리 감기</h3><button class="chip-btn" id="pot-close">닫기</button></div>
+   <p style="margin:0;font-size:.86rem;color:var(--muted)">모든 화분의 시간을 앞당겨요. 그동안 물은 알맞게 맞춰 주고, 영양분은 평소처럼 줄어요. 밤에는 자라지 않아요. 길게 감을수록 시간당 이슬이 적게 들어요.</p>
+   <div class="ff-chips" style="display:flex;flex-wrap:wrap;gap:6px">${FF_STEPS.map((x,i)=>`<button class="chip-btn${i===ffIdx?' solid':''}" data-ffi="${i}">${ffLabel(x)}</button>`).join('')}</div>
+   <input type="range" id="ff-range" min="0" max="${FF_STEPS.length-1}" step="1" value="${ffIdx}" aria-label="감을 시간" style="width:100%;accent-color:var(--accent)">
+   <div class="ff-opt" style="cursor:default"><span>${ffLabel(h)} 앞으로<small>현실로 치면 ${fmtReal(h)} 기다릴 시간 · 시간당 이슬 ${perH}</small></span><b>이슬 ${c}</b></div>
+   <p style="margin:0;font-size:.82rem;color:var(--muted)">${grow.length?'자라는 화분: '+grow.join(', '):'이번에는 단계가 오르는 화분이 없어요. 성장 게이지는 차올라요.'}</p>
+   <button class="ff-opt" id="ff-go" style="justify-content:center;font-weight:600;background:var(--accent);color:var(--on-accent);border-color:var(--accent)" ${S.dew<c?'disabled':''}>${S.dew<c?`이슬이 ${c-S.dew}개 부족해요`:`${ffLabel(h)} 감기`}</button>
+   <p style="margin:0;font-size:.78rem;color:var(--muted)">지금 이슬 ${S.dew}개</p>`);
+}
+$('b-ff').onclick=renderFF;
+function fastForward(h){
+  tick();const before=S.plants.map(p=>stageOf(p.xp).s);simFF(h,S.plants);
+  S.start-=h*GH;S.plants.forEach(p=>{p.lastTick=Date.now()});
+  let ups=0;S.plants.forEach((p,i)=>{const a=stageOf(p.xp).s;if(a>before[i]){ups++;stageUp(p,a,true)}});
+  logIt(`시간을 ${ffLabel(h)} 앞당겼어요`);return ups;
+}
+$('pot-sheet').addEventListener('click',e=>{
+  const fi=e.target.closest('[data-ffi]');if(fi){ffIdx=+fi.dataset.ffi;renderFF();return}
+  if(e.target.closest('#ff-go')&&!e.target.closest('#ff-go').disabled){const h=FF_STEPS[ffIdx],c=ffCost(h);if(S.dew<c)return;S.dew-=c;$('pot-sheet').hidden=true;
+    const sc=$('scene');sc.classList.remove('ffwd');void sc.offsetWidth;sc.classList.add('ffwd');
+    const ups=fastForward(h);save();setTimeout(()=>{renderGarden();toast(`${ffLabel(h)} 감았어요${ups?` · ${ups}개 화분이 한 단계 자랐어요`:''}`)},700);return}
+  if(e.target.closest('#drop-yes')){const p=active(),r=refundOf(p);S.plants=S.plants.filter(q=>q!==p);S.dew+=r;S.active=S.plants[0].id;logIt(`${pname(p)}을(를) 정원에서 보냈어요 · 이슬 ${r} 돌려받음`);$('pot-sheet').hidden=true;note='';save();renderAll();toast(`이슬 ${r}개를 돌려받았어요`);return}
+});
+$('pot-sheet').addEventListener('input',e=>{if(e.target.id==='ff-range'){ffIdx=+e.target.value;const v=ffIdx;renderFF();const r=$('ff-range');if(r){r.value=v;r.focus()}}});
+function renderPotSheet(){
+  const p=active(),st=stageOf(p.xp);
+  $('pot-panel').innerHTML=`<div class="sec-h"><h3>화분 꾸미기</h3><button class="chip-btn" id="pot-close">완료</button></div>
+   <div class="preview">${potSVG(p.sp,st.s,st.p,p.id,p.pot,{style:p.potStyle})}</div>
+   ${SPECIES[p.sp].airplant?'<p style="margin:0;font-size:.84rem;color:var(--muted)">틸란드시아는 흙 없이 걸어두는 식물이라 화분이 없어요.</p>':SPECIES[p.sp].hang?'<p style="margin:0;font-size:.84rem;color:var(--muted)">걸이 화분은 색만 바꿀 수 있어요.</p>':`<div class="sec-h"><h4 style="font-size:.95rem">모양</h4><small>이슬 ${S.dew}개 있어요</small></div>
+   <div class="pot-grid">${Object.entries(POT_STYLES).map(([k,v])=>{const own=S.ownedPots.includes(k);return `<button class="pot-opt${p.potStyle===k?' on':''}${own?'':' locked'}" data-pot="${k}">${potOnly(k,POTS[p.pot]||POTS[0])}<span>${v.name}</span><small>${own?(p.potStyle===k?'사용 중':'보유'):'이슬 '+v.cost}</small></button>`}).join('')}</div>`}
+   <h4 style="font-size:.95rem;margin:0">색</h4>
+   <div class="swatches">${POTS.map((c,i)=>`<button class="sw${p.pot===i?' on':''}" data-col="${i}" style="background:${c}" aria-label="${POT_NAMES[i]}" title="${POT_NAMES[i]}"></button>`).join('')}</div>
+   <p style="margin:0;font-size:.78rem;color:var(--muted)">한 번 산 모양은 모든 화분에 쓸 수 있어요. 색은 무료예요.</p>`;
+}
+$('b-pot').onclick=()=>{renderPotSheet();$('pot-sheet').hidden=false};
+$('pot-sheet').addEventListener('click',e=>{
+  const p=active();
+  if(e.target===$('pot-sheet')||e.target.closest('#pot-close')){$('pot-sheet').hidden=true;renderGarden();return}
+  const po=e.target.closest('[data-pot]');if(po){const k=po.dataset.pot,v=POT_STYLES[k];
+    if(!S.ownedPots.includes(k)){if(S.dew<v.cost){toast(`이슬이 ${v.cost-S.dew}개 더 필요해요`);return}S.dew-=v.cost;S.ownedPots.push(k);logIt(`${v.name}을(를) 샀어요`);toast(`${v.name}을(를) 들였어요`)}
+    p.potStyle=k;save();renderPotSheet();return}
+  const sw=e.target.closest('[data-col]');if(sw){p.pot=+sw.dataset.col;save();renderPotSheet()}
+});
 $('b-rename').onclick=()=>{const p=active(),box=$('name-box');if(box.querySelector('input'))return;
   box.innerHTML=`<input id="rename" maxlength="12" value="${(p.nick||'').replace(/"/g,'&quot;')}" placeholder="${SPECIES[p.sp].name}" aria-label="식물 이름"><div class="latin">비워두면 원래 이름으로 돌아가요 · Enter로 저장</div>`;
   const inp=$('rename');inp.focus();
@@ -709,10 +984,15 @@ document.addEventListener('click',e=>{
   const f=e.target.closest('[data-f]');if(f){shopFilter=f.dataset.f;renderShop();return}
   const buy=e.target.closest('[data-buy]');if(buy&&!buy.disabled){const k=buy.dataset.buy,sp=SPECIES[k];if(S.dew<sp.cost||S.plants.length>=10)return;
     S.dew-=sp.cost;const id='p'+Date.now().toString(36),now=Date.now();
-    S.plants.push({id,sp:k,xp:0,water:Math.round((sp.band[0]+sp.band[1])/2),feed:45,lastTick:now,lastWater:now,lastWipe:0,born:now,nick:'',pot:sp.pot});
+    S.plants.push({id,sp:k,xp:0,water:Math.round((sp.band[0]+sp.band[1])/2),feed:45,lastTick:now,lastWater:now,lastWipe:0,born:now,nick:'',pot:sp.pot,potStyle:'basic'});
     S.active=id;note=`<b>${sp.name} 씨앗을 심었어요.</b> ${sp.facts[0]}`;logIt(`${sp.name} 씨앗을 심었어요`);save();renderAll();show('garden');toast(`${sp.name}을(를) 창가에 놓았어요`);return}
   const tb=e.target.closest('[data-t]');
   if(tb&&tb.closest('#tabs2')){bookTab=tb.dataset.t;renderBook();return}
+  if(e.target.closest('#acct-later')){S.bannerOff=true;save();renderGarden();return}
+  if(e.target.closest('#acct-go')){bookTab='save';show('book');setTimeout(()=>{const i=$('acct-id');if(i)i.focus()},50);return}
+  const al=e.target.closest('#acct-login,#acct-new');if(al){acctSubmit(al.id==='acct-new'?'register':'login',al);return}
+  if(e.target.closest('#acct-out')){api({action:'logout',token:AUTH.token}).catch(()=>{});setAuth(null);renderBook();renderGarden();toast('로그아웃했어요. 이 기기의 정원은 그대로 있어요');return}
+  if(e.target.closest('#acct-sync')){cloudPush(false);clearTimeout(cloudT);api({action:'push',token:AUTH.token,data:S}).then(()=>toast('저장했어요')).catch(e=>toast(e.message));return}
   if(e.target.closest('#copy-code')){const ta=$('save-code');const txt=ta.value;Promise.resolve().then(()=>navigator.clipboard.writeText(txt)).then(()=>toast('저장 코드를 복사했어요')).catch(()=>{ta.focus();ta.select();toast('코드를 길게 눌러 복사해 주세요')});return}
   if(e.target.closest('#load-btn')){const r=importCode($('load-code').value);if(r){S=r;S.lastSeen=Date.now();tick();save(true);renderAll();bookTab='dex';show('garden');toast('정원을 불러왔어요')}else toast('코드를 읽지 못했어요. 처음부터 끝까지 빠짐없이 붙여 넣었는지 확인해 주세요');return}
   const rb=e.target.closest('#reset-btn');if(rb){if(rb.dataset.sure){S=fresh();save(true);renderAll();show('garden');toast('새 정원을 시작했어요')}else{rb.dataset.sure='1';rb.textContent='정말 지울까요? 한 번 더 누르세요'}return}
@@ -725,12 +1005,27 @@ function awayReward(){
   const now=Date.now(),last=S.lastSeen||0;S.lastSeen=now;
   if(!last)return null;
   const min=(now-last)/60000;if(min<5)return null;
-  const dew=Math.min(150,Math.max(2,Math.round(min/3)));   // 3분마다 이슬 1, 최대 150
+  // 2분마다 이슬 1개, 1시간마다 보너스 5개, 최대 300개
+  const dew=Math.min(300,Math.max(3,Math.round(min/2)+Math.floor(min/60)*5));
   S.dew+=dew;logIt(`${fmtAway(min)} 공부하고 돌아왔어요 · 이슬 ${dew}`);save();
-  return{min,dew};
+  const trouble=S.plants.map(q=>({q,hs:hpState(q.health??100)})).filter(x=>x.hs!=='ok'||x.q.water<SPECIES[x.q.sp].band[0]);
+  return{min,dew,trouble};
 }
 function fmtAway(min){if(min<60)return Math.round(min)+'분';const h=Math.floor(min/60),m=Math.round(min%60);return m?`${h}시간 ${m}분`:`${h}시간`}
 const seen=()=>{S.lastSeen=Date.now();save()};
+async function acctSubmit(kind,btn){
+  const id=($('acct-id').value||'').trim(),pw=$('acct-pw').value||'',err=$('acct-err');
+  if(!/^[A-Za-z0-9가-힣_]{3,20}$/.test(id)){err.textContent='아이디는 영문, 숫자, 한글, 밑줄로 3~20자예요';return}
+  if(pw.length<6){err.textContent='비밀번호는 6자 이상이에요';return}
+  btn.disabled=true;err.textContent='';
+  try{
+    if(kind==='register'){S.savedAt=Date.now();const r=await api({action:'register',id,pw,data:S});setAuth({id:r.id,token:r.token});toast('계정을 만들었어요. 이제 다른 기기에서도 로그인하면 돼요')}
+    else{const r=await api({action:'login',id,pw});setAuth({id:r.id,token:r.token});
+      if(r.data&&r.data.plants){S=migrate(r.data);S.lastSeen=Date.now();tick();try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}toast(`${r.id} 계정의 정원을 불러왔어요`)}
+      else{await api({action:'push',token:r.token,data:S});toast('로그인했어요')}}
+    cloudState='saved';renderAll();
+  }catch(e){err.textContent=e.message;btn.disabled=false}
+}
 
 /* =============== quiz (한 번에 한 문제) =============== */
 let Q=null;
@@ -744,8 +1039,8 @@ function openQuiz(mode){Q={id:pickQ(mode),mode,picked:null};$('sheet').hidden=fa
 function closeQuiz(){$('sheet').hidden=true;document.body.style.overflow='';Q=null;renderGarden()}
 function renderQ(){
   const q=QUIZ[Q.id],ans=Q.picked!==null,p=active(),st=stageOf(p.xp),ok=ans&&Q.picked===q.a;
-  const away=Q.mode==='open'&&pendingAway?`<div class="welcome"><svg viewBox="0 0 16 16"><path d="M8 1.5C8 1.5 3 7 3 10a5 5 0 0 0 10 0c0-3-5-8.5-5-8.5z" fill="var(--water)"/></svg><div><b>${fmtAway(pendingAway.min)} 동안 공부하고 왔네요</b><span>그동안 맺힌 이슬 ${pendingAway.dew}개를 받았어요</span></div></div>`:'';
-  const head=away+(Q.mode==='open'?`<div class="q-head">${potSVG(p.sp,st.s,st.p,p.id,p.pot,{sway:true})}<div><h2>${hello()}</h2><p>${pname(p)}에게 가기 전에 한 문제만 풀어요. 맞히면 이슬 5, 틀려도 1.</p></div></div>`:'');
+  const away=Q.mode==='open'&&pendingAway?`<div class="welcome"><svg viewBox="0 0 16 16"><path d="M8 1.5C8 1.5 3 7 3 10a5 5 0 0 0 10 0c0-3-5-8.5-5-8.5z" fill="var(--water)"/></svg><div><b>${fmtAway(pendingAway.min)} 동안 공부하고 왔네요</b><span>그동안 맺힌 이슬 ${pendingAway.dew}개를 받았어요${pendingAway.trouble&&pendingAway.trouble.length?`<br>정원 소식: ${pendingAway.trouble.slice(0,3).map(x=>`${pname(x.q)} ${x.hs==='ok'?'목마름':HP_LABEL[x.hs]}`).join(', ')}${pendingAway.trouble.length>3?` 외 ${pendingAway.trouble.length-3}개`:''}. 문제를 풀고 돌봐 주세요.`:'<br>정원은 모두 잘 지내고 있어요.'}</span></div></div>`:'';
+  const head=away+(Q.mode==='open'?`<div class="q-head">${potSVG(p.sp,st.s,st.p,p.id,p.pot,{sway:true,style:p.potStyle,hp:p.health})}<div><h2>${hello()}</h2><p>${pname(p)}에게 가기 전에 한 문제만 풀어요. 맞히면 이슬 5, 틀려도 1.</p></div></div>`:'');
   $('q-in').innerHTML=`${head}<div><div class="q-label">${Q.mode==='wrong'?'오답 다시 풀기':'오늘의 식물 문제'}</div><p class="q-text">${q.q}</p></div>
    <div class="opts">${q.o.map((t,k)=>`<button class="opt ${ans?(k===q.a?'right':k===Q.picked?'wrong':'dim'):''}" data-k="${k}" ${ans?'disabled':''}><span class="k">${'ABCD'[k]}</span><span>${t}</span></button>`).join('')}</div>
    ${ans?`<div class="explain"><b>${ok?'정답이에요':'정답은 '+'ABCD'[q.a]+'. '+q.o[q.a]}</b>${q.e}<div class="gain" style="margin-top:6px">이슬 +${ok?5:1}${ok?'':' · 오답 노트에 담았어요'}</div></div>`:''}
@@ -765,12 +1060,13 @@ function answer(k){
 
 /* =============== boot =============== */
 try{if('serviceWorker' in navigator&&document.querySelector('link[rel=manifest]'))navigator.serviceWorker.register('/sw.js').catch(()=>{})}catch(e){}
-tick();pendingAway=awayReward();renderAll();openQuiz('open');save();
+tick();pendingAway=awayReward();renderAll();openQuiz('open');save();cloudPull();
 setInterval(()=>{if(document.hidden)return;renderScene()},5000);
 setInterval(()=>{if(document.hidden)return;tick();seen();if(!$('v-garden').hidden&&$('sheet').hidden)renderGarden()},30000);
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){seen();save(true);return}
   tick();const r=awayReward();renderGarden();if(r)toast(`${fmtAway(r.min)} 동안 공부하고 왔네요 · 이슬 +${r.dew}`);
+  cloudPull();
 });
 window.addEventListener('pagehide',()=>{S.lastSeen=Date.now();save(true)});
 })();
